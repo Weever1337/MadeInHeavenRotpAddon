@@ -1,0 +1,25 @@
+{
+  "entity.rotp_mih.madeinheaven": "Made in Heaven",
+  "stand.rotp_mih.madeinheaven": "Made in Heaven",
+
+  "action.rotp_mih.mih_punch": "Удар",
+  "action.rotp_mih.mih_heavy_punch": "Важкий удар",
+  "action.rotp_mih.mih_impale": "Проколоти",
+  "action.rotp_mih.mih_barrage": "Шквал ударів",
+
+  "action.rotp_mih.mih_dash": "Кідатися",
+  "action.rotp_mih.mih_two_steps": "Два кроки позаду",
+  "action.rotp_mih.mih_time_acceleration": "Прискорення часу",
+  "action.rotp_mih.mih_universe_reset": "Скидання Всесвіту",
+  "action.rotp_mih.mih_cancel": "Скасувати дію",
+  "action.rotp_mih.mih_block": "Блокувати",
+
+  "rotp_mih.subtitle.madeinheaven_summon": "\"Made in Heaven!\"",
+
+  "rotp_mih.message.action_condition.cant_use_without_timeaccel": "Ви не можете використовувати цю дію без прискорення часу.",
+
+  "effect.rotp_mih.bleeding": "Кровотеча",
+  "effect.rotp_mih.acceleration": "Прискорення",
+
+  "jojo.command.desc.cum": "Змусити гравця кінчити // Додано в аддон Made in Heaven"
+}

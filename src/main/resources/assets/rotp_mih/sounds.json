@@ -1,0 +1,52 @@
+{
+  "mih_summon": {
+    "sounds": [ "rotp_mih:mih_summon" ],
+    "subtitle": "rotp_mih.subtitle.madeinheaven_summon"
+  },
+  "mih_unsummon": {
+    "sounds": [ "rotp_mih:mih_unsummon" ]
+  },
+  "mih_barrage":{
+    "sounds": [ "rotp_mih:mih_barrage" ]
+  },
+  "mih_heavy_punch": {
+    "sounds": [ "rotp_mih:mih_heavy_punch" ]
+  },
+  "mih_impale": {
+    "sounds": [ "rotp_mih:mih_impale" ]
+  },
+  "mih_dash": {
+    "sounds": [ "rotp_mih:mih_dash_1", "rotp_mih:mih_dash_2", "rotp_mih:mih_dash_3" ]
+  },
+  "mih_two_steps": {
+    "sounds": [ "rotp_mih:mih_two_steps" ]
+  },
+  "mih_time_acceleration": {
+    "sounds": [ "rotp_mih:mih_time_acceleration_1", "rotp_mih:mih_time_acceleration_1" ]
+  },
+  "mih_universe_reset": {
+    "sounds": [ "rotp_mih:mih_universe_reset" ]
+  },
+
+  "mih_summon_user": {
+    "sounds": [ "rotp_mih:stand_user/mih_summon_user" ]
+  },
+  "mih_barrage_user": {
+    "sounds": [ "rotp_mih:stand_user/mih_barrage_user" ]
+  },
+  "mih_heavy_punch_user": {
+    "sounds": [ "rotp_mih:stand_user/mih_heavy_punch_user" ]
+  },
+  "mih_impale_user": {
+    "sounds": [ "rotp_mih:stand_user/mih_impale_user" ]
+  },
+  "mih_dash_user": {
+    "sounds": [ "rotp_mih:stand_user/mih_dash_user_1", "rotp_mih:stand_user/mih_dash_user_2" ]
+  },
+  "mih_time_acceleration_user": {
+    "sounds": [ "rotp_mih:stand_user/mih_time_acceleration_user" ]
+  },
+  "mih_universe_reset_user": {
+    "sounds": [ "rotp_mih:stand_user/mih_universe_reset_user" ]
+  }
+}

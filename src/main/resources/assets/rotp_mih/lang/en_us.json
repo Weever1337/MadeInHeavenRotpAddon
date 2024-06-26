@@ -1,0 +1,24 @@
+{
+  "entity.rotp_mih.madeinheaven": "Made in Heaven",
+  "stand.rotp_mih.madeinheaven": "Made in Heaven",
+
+  "action.rotp_mih.mih_punch": "Punch",
+  "action.rotp_mih.mih_heavy_punch": "Heavy Punch",
+  "action.rotp_mih.mih_impale": "Impale",
+  "action.rotp_mih.mih_barrage": "Barrage",
+
+  "action.rotp_mih.mih_dash": "Dash",
+  "action.rotp_mih.mih_two_steps": "Two Steps Behind",
+  "action.rotp_mih.mih_time_acceleration": "Time Acceleration",
+  "action.rotp_mih.mih_universe_reset": "Universe Reset",
+  "action.rotp_mih.mih_cancel": "Cancel Action",
+  "action.rotp_mih.mih_block": "Block",
+
+  "rotp_mih.subtitle.madeinheaven_summon": "\"Made in heaven!\"",
+
+  "rotp_mih.message.action_condition.cant_use_without_timeaccel": "You can not use this action without time acceleration",
+
+  "effect.rotp_mih.bleeding": "Bleeding",
+  "effect.rotp_mih.acceleration": "Acceleration",
+  "jojo.command.desc.cum": "Make a player cumming // Added in Made in Heaven addon"
+}

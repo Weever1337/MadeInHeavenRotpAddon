@@ -1,0 +1,25 @@
+{
+  "entity.rotp_mih.madeinheaven": "Made in Heaven",
+  "stand.rotp_mih.madeinheaven": "Made in Heaven",
+
+  "action.rotp_mih.mih_punch": "Удар",
+  "action.rotp_mih.mih_heavy_punch": "Тяжелый удар",
+  "action.rotp_mih.mih_impale": "Пронзить",
+  "action.rotp_mih.mih_barrage": "Шквал ударов",
+
+  "action.rotp_mih.mih_dash": "Бросаться",
+  "action.rotp_mih.mih_two_steps": "Два шага позади",
+  "action.rotp_mih.mih_time_acceleration": "Ускорение времени",
+  "action.rotp_mih.mih_universe_reset": "Сброс Вселенной",
+  "action.rotp_mih.mih_cancel": "Отменить действие",
+  "action.rotp_mih.mih_block": "Блокировать",
+
+  "rotp_mih.subtitle.madeinheaven_summon": "\"Made in Heaven!\"",
+
+  "rotp_mih.message.action_condition.cant_use_without_timeaccel": "Вы не можете использовать это действие без ускорения времени.",
+
+  "effect.rotp_mih.bleeding": "Кровотечение",
+  "effect.rotp_mih.acceleration": "Ускорение",
+
+  "jojo.command.desc.cum": "Заставить игрока кончить // Добавлено в аддон Made in Heaven"
+}
