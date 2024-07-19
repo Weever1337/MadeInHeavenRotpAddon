@@ -2,7 +2,6 @@ package com.weever.rotp_mih.effects;
 
 import com.github.standobyte.jojo.potion.IApplicableEffect;
 import com.github.standobyte.jojo.potion.UncurableEffect;
-
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;

@@ -1,8 +1,8 @@
 package com.weever.rotp_mih.init;
 
 import com.weever.rotp_mih.RotpMadeInHeavenAddon;
-import com.weever.rotp_mih.effects.*;
-
+import com.weever.rotp_mih.effects.AccelerationEffect;
+import com.weever.rotp_mih.effects.BleedingEffect;
 import net.minecraft.potion.Effect;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;

@@ -1,16 +1,15 @@
 package com.weever.rotp_mih.command;
 
-import java.util.Collection;
-
 import com.github.standobyte.jojo.command.JojoCommandsCommand;
 import com.github.standobyte.jojo.util.mc.MCUtil;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
 import net.minecraft.entity.player.ServerPlayerEntity;
+
+import java.util.Collection;
 
 public class CumCommand {
     public static void register(CommandDispatcher<CommandSource> dispatcher) {

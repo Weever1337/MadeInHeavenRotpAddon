@@ -1,13 +1,11 @@
 package com.weever.rotp_mih.client;
 
-import com.github.standobyte.jojo.client.particle.MeteoriteVirusParticle;
 import com.github.standobyte.jojo.client.particle.custom.CustomParticlesHelper;
 import com.github.standobyte.jojo.client.resources.CustomResources;
 import com.weever.rotp_mih.RotpMadeInHeavenAddon;
 import com.weever.rotp_mih.client.particle.CumParticle;
 import com.weever.rotp_mih.client.particle.SparkParticle;
 import com.weever.rotp_mih.client.render.entity.renderer.stand.MihRenderer;
-
 import com.weever.rotp_mih.init.InitParticles;
 import com.weever.rotp_mih.init.InitStands;
 import net.minecraft.client.Minecraft;

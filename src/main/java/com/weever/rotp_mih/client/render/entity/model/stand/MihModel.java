@@ -1,14 +1,9 @@
 package com.weever.rotp_mih.client.render.entity.model.stand;
 
-import com.weever.rotp_mih.entity.stand.stands.MihEntity;
-import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.client.render.entity.model.stand.HumanoidStandModel;
 import com.github.standobyte.jojo.client.render.entity.pose.ModelPose;
-import com.github.standobyte.jojo.client.render.entity.pose.ModelPoseTransition;
-import com.github.standobyte.jojo.client.render.entity.pose.ModelPoseTransitionMultiple;
 import com.github.standobyte.jojo.client.render.entity.pose.RotationAngle;
-import com.github.standobyte.jojo.client.render.entity.pose.anim.PosedActionAnimation;
-import com.github.standobyte.jojo.entity.stand.StandPose;
+import com.weever.rotp_mih.entity.stand.stands.MihEntity;
 import net.minecraft.client.renderer.model.ModelRenderer;
 
 public class MihModel extends HumanoidStandModel<MihEntity> {

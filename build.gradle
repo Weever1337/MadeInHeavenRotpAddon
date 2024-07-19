@@ -7,11 +7,13 @@ buildscript {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
+
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = "${addon_version}"
+//version = "${addon_version}-" + new Date().format('yyMMdd') + "-a"
+version = release.toBoolean() ? "${addon_version}" : "${addon_version}-" + new Date().format('yyMMdd') + "-a"
 group = mod_group_id
 archivesBaseName = mod_name
 
@@ -49,7 +51,7 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
-            args '--mod', 'pearljam', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', 'madeinheaven', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
                 mod_id {
@@ -67,12 +69,20 @@ repositories {
         name "RotP Maven"
         url 'https://raw.githubusercontent.com/StandoByte/RotP-maven/main'
     }
+    maven {
+        name "Curse Maven"
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 dependencies {
     implementation 'org.jetbrains:annotations:24.0.0'
     minecraft 'net.minecraftforge:forge:1.16.5-36.2.34'
 	implementation fg.deobf("standobyte.jojo:JJBA-RipplesOfThePast:${main_mod_version}")
+    implementation fg.deobf("curse.maven:hourglass-511172:3488913")
 }
 
 jar {

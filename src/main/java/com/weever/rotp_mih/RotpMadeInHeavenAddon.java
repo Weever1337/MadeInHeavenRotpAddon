@@ -1,10 +1,8 @@
 package com.weever.rotp_mih;
 
 import com.weever.rotp_mih.init.*;
-import com.weever.rotp_mih.network.AddonPackets;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,8 +21,6 @@ public class RotpMadeInHeavenAddon {
         InitStands.STANDS.register(modEventBus);
         InitEffects.EFFECTS.register(modEventBus);
         InitParticles.PARTICLES.register(modEventBus);
-
-        AddonPackets.init();
     }
 
     public static Logger getLogger() {

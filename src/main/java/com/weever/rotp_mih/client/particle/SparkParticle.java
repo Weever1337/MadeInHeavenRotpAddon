@@ -1,26 +1,26 @@
 package com.weever.rotp_mih.client.particle;
 
 
-import net.minecraft.client.particle.IAnimatedSprite;
-import net.minecraft.client.particle.IParticleFactory;
-import net.minecraft.client.particle.IParticleRenderType;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.SpriteTexturedParticle;
+import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.NotNull;
 
 public class SparkParticle extends SpriteTexturedParticle {
 
     protected SparkParticle(ClientWorld world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
         super(world, x, y, z, xSpeed, ySpeed, zSpeed);
-        lifetime = 100;
-        quadSize = 0.09F;
-        hasPhysics = false;
+        lifetime = 20;
+        quadSize = 0.15F;
+        hasPhysics = true;
+        xd = xSpeed;
+        yd = ySpeed;
+        zd = zSpeed;
     }
 
     @Override
-    public IParticleRenderType getRenderType() {
+    public @NotNull IParticleRenderType getRenderType() {
         return IParticleRenderType.PARTICLE_SHEET_LIT;
     }
 

@@ -1,11 +1,9 @@
 package com.weever.rotp_mih.init;
 
-import com.weever.rotp_mih.RotpMadeInHeavenAddon;
-import com.github.standobyte.jojo.init.ModSounds;
 import com.github.standobyte.jojo.util.mc.OstSoundList;
+import com.weever.rotp_mih.RotpMadeInHeavenAddon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -37,6 +35,10 @@ public class InitSounds {
 
     public static final Supplier<SoundEvent> MIH_TWO_STEPS = SOUNDS.register("mih_two_steps",
             () -> new SoundEvent(new ResourceLocation(RotpMadeInHeavenAddon.MOD_ID, "mih_two_steps"))
+    );
+
+    public static final Supplier<SoundEvent> MIH_THROAT_SLICE = SOUNDS.register("mih_throat_slice",
+            () -> new SoundEvent(new ResourceLocation(RotpMadeInHeavenAddon.MOD_ID, "mih_throat_slice"))
     );
 
     public static final Supplier<SoundEvent> MIH_TIME_ACCELERATION = SOUNDS.register("mih_time_acceleration",
