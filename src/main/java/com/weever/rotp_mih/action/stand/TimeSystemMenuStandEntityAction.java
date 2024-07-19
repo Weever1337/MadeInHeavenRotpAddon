@@ -26,8 +26,10 @@ public class TimeSystemMenuStandEntityAction extends CustomStandEntityAction {
 
     @Override
     public void standPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
-        if (world.isClientSide()) { return; }
+        if (!world.isClientSide()) { return; }
         TimeSystemMenu.openWindowOnClick();
+        System.out.println(GameplayUtil.getGlobalValue().getPlayer());
+        System.out.println(GameplayUtil.getGlobalValue().getValue());
     }
 
     @Override

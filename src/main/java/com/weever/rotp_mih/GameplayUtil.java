@@ -14,6 +14,7 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -21,6 +22,7 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.github.standobyte.jojo.action.stand.TimeResume.userTimeStopInstance;
@@ -30,7 +32,7 @@ public class GameplayUtil {
     private static final int TICKS_FIRST_CLICK = TimeStopInstance.TIME_RESUME_SOUND_TICKS + 1;
     private static final Map<PlayerEntity, Integer> playerTickCounters = new HashMap<>();
     private static TimeData globalValue = new TimeData(null, Values.NONE);
-    public static void setGlobalValue(PlayerEntity player, Values val) {
+    public static void setGlobalValue(UUID player, Values val) {
         globalValue = new TimeData(player, val);
     }
     public static TimeData getGlobalValue() {
@@ -86,6 +88,18 @@ public class GameplayUtil {
                     }
                 }
             });
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void onPlayerDeathWithTimeManipulation(LivingDeathEvent event) {
+        if (globalValue.getValue() == Values.ACCELERATION) {
+            if (event.getEntityLiving() instanceof PlayerEntity) {
+                PlayerEntity player = (PlayerEntity) event.getEntityLiving();
+                if (globalValue.getPlayer().equals(player.getUUID())) {
+                    setGlobalValue(null, Values.NONE);
+                }
+            }
         }
     }
 

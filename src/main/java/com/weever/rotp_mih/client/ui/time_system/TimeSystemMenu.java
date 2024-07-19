@@ -104,6 +104,7 @@ public class TimeSystemMenu extends Screen { // Weather Report && Kraft Work Ref
     public void render(MatrixStack matrixStack, int x, int y, float p_230430_4_) {
         matrixStack.pushPose();
         RenderSystem.enableBlend();
+        assert this.minecraft != null;
         this.minecraft.getTextureManager().bind(MENU);
         matrixStack.popPose();
         super.render(matrixStack, x, y, p_230430_4_);

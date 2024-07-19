@@ -22,9 +22,11 @@ public class TimeSystemReleaseAcceleration extends CustomStandEntityAction {
         if (world.isClientSide()) { return; }
         MihEntity mih = (MihEntity) standEntity;
         PlayerEntity player = (PlayerEntity) userPower.getUser();
-        if (GameplayUtil.getGlobalValue().getValue() == GameplayUtil.Values.NONE || GameplayUtil.getGlobalValue().getPlayer() == player) {
+        if (GameplayUtil.getGlobalValue().getValue() == GameplayUtil.Values.NONE || GameplayUtil.getGlobalValue().getPlayer() == player.getUUID()) {
             mih.setValue(GameplayUtil.Values.ACCELERATION);
-            GameplayUtil.setGlobalValue(player, GameplayUtil.Values.ACCELERATION);
+            GameplayUtil.setGlobalValue(player.getUUID(), GameplayUtil.Values.ACCELERATION);
+            System.out.println(GameplayUtil.getGlobalValue().getPlayer());
+            System.out.println(GameplayUtil.getGlobalValue().getValue());
             world.playSound(null,standEntity.blockPosition(), InitSounds.MIH_TIME_ACCELERATION.get(), SoundCategory.PLAYERS,1,1);
         } else {
             player.displayClientMessage(new TranslationTextComponent("rotp_mih.message.action_condition.already_time_manipulation"), true);

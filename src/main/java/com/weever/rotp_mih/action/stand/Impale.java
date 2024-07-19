@@ -20,7 +20,6 @@ public class Impale extends StandEntityHeavyAttack {
 
     @Override
     protected ActionConditionResult checkStandConditions(StandEntity stand, IStandPower power, ActionTarget target) {
-        MihEntity MiH = (MihEntity) stand;
         if (power.getStamina() < 50) return ActionConditionResult.NEGATIVE;
         return ActionConditionResult.POSITIVE;
     }

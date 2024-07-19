@@ -3,16 +3,18 @@ package com.weever.rotp_mih.utils;
 import com.weever.rotp_mih.GameplayUtil;
 import net.minecraft.entity.player.PlayerEntity;
 
+import java.util.UUID;
+
 public class TimeData {
-    private final PlayerEntity player;
+    private final UUID player;
     private final GameplayUtil.Values value;
 
-    public TimeData(PlayerEntity player, GameplayUtil.Values value) {
+    public TimeData(UUID player, GameplayUtil.Values value) {
         this.player = player;
         this.value = value;
     }
 
-    public PlayerEntity getPlayer() {
+    public UUID getPlayer() {
         return player;
     }
 

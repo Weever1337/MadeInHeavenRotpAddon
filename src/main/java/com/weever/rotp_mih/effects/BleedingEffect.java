@@ -20,7 +20,8 @@ public class BleedingEffect extends UncurableEffect {
         if (!entity.level.isClientSide()) {
             if (amplifier == 0) amplifier = 1;
             if (entity.tickCount % amplifier == 0)
-                entity.hurt(DamageSource.MAGIC, (float) amplifier / 2);
+                if (entity.isAlive())
+                    entity.hurt(DamageSource.MAGIC, (float) amplifier / 2);
         }
     }
 

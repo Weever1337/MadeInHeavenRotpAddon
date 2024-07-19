@@ -20,9 +20,10 @@ public class TimeSystemReleaseSlow extends CustomStandEntityAction {
         if (world.isClientSide()) { return; }
         MihEntity mih = (MihEntity) standEntity;
         PlayerEntity player = (PlayerEntity) userPower.getUser();
-        if (GameplayUtil.getGlobalValue().getValue() == GameplayUtil.Values.NONE || GameplayUtil.getGlobalValue().getPlayer() == player) {
+        if (GameplayUtil.getGlobalValue().getValue() == GameplayUtil.Values.NONE || GameplayUtil.getGlobalValue().getPlayer() == player.getUUID()) {
             mih.setValue(GameplayUtil.Values.SLOW);
-            GameplayUtil.setGlobalValue(player, GameplayUtil.Values.SLOW);
+            GameplayUtil.setGlobalValue(player.getUUID(), GameplayUtil.Values.SLOW);
+            System.out.println(GameplayUtil.getGlobalValue().getPlayer());
             System.out.println(GameplayUtil.getGlobalValue().getValue());
         } else {
             player.displayClientMessage(new TranslationTextComponent("rotp_mih.message.action_condition.already_time_manipulation"), true);

@@ -23,7 +23,6 @@ public class LightSpeedDash extends CustomStandEntityAction {
 
     @Override
     protected ActionConditionResult checkStandConditions(StandEntity stand, IStandPower power, ActionTarget target) {
-        if (GameplayUtil.getGlobalValue().getValue() == GameplayUtil.Values.ACCELERATION && GameplayUtil.getGlobalValue().getPlayer() == power.getUser()) return ActionConditionResult.POSITIVE;
         if (power.getStamina() > 50) return ActionConditionResult.POSITIVE;
         return ActionConditionResult.NEGATIVE;
     }

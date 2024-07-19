@@ -20,9 +20,11 @@ public class TimeSystemReleaseClear extends CustomStandEntityAction {
         if (world.isClientSide()) { return; }
         MihEntity mih = (MihEntity) standEntity;
         PlayerEntity player = (PlayerEntity) userPower.getUser();
-        if (GameplayUtil.getGlobalValue().getValue() != GameplayUtil.Values.NONE && GameplayUtil.getGlobalValue().getPlayer() == player) {
+        if (GameplayUtil.getGlobalValue().getValue() != GameplayUtil.Values.NONE && GameplayUtil.getGlobalValue().getPlayer() == player.getUUID()) {
             mih.setValue(GameplayUtil.Values.NONE);
             GameplayUtil.setGlobalValue(null, GameplayUtil.Values.NONE);
+            System.out.println(GameplayUtil.getGlobalValue().getPlayer());
+            System.out.println(GameplayUtil.getGlobalValue().getValue());
         } else {
             player.displayClientMessage(new TranslationTextComponent("rotp_mih.message.action_condition.already_cleared"), true);
         }

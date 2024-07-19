@@ -2,6 +2,7 @@ package com.weever.rotp_mih.entity.stand.stands;
 
 import com.github.standobyte.jojo.action.ActionTarget;
 import com.github.standobyte.jojo.capability.entity.LivingUtilCapProvider;
+import com.github.standobyte.jojo.capability.world.TimeStopHandler;
 import com.github.standobyte.jojo.client.InputHandler;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityType;
@@ -54,6 +55,9 @@ public class MihEntity extends StandEntity {
 			}
 			if (isValue(GameplayUtil.Values.ACCELERATION)) {
 				clearSlowOnly();
+				if (TimeStopHandler.isTimeStopped(level, user.blockPosition())) {
+					return;
+				}
 				if (!level.isClientSide()) {
 					long multiplier = 0;
 					ServerLevelWrapper svw = new ServerLevelWrapper(this.level);
@@ -93,6 +97,9 @@ public class MihEntity extends StandEntity {
 				}
 			} else if (isValue(GameplayUtil.Values.SLOW)) {
 				clearAccelerationOnly();
+				if (TimeStopHandler.isTimeStopped(level, user.blockPosition())) {
+					return;
+				}
 				if (!level.isClientSide()) {
 					if (slowTick == 0) {
 						ServerLevelWrapper svw = new ServerLevelWrapper(this.level);

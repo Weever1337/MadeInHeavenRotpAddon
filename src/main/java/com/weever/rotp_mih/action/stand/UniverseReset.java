@@ -33,7 +33,7 @@ public class UniverseReset extends CustomStandEntityAction {
 
     @Override
     public void standTickPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
-        if(!world.isClientSide){
+        if(!world.isClientSide) {
             LivingEntity user = userPower.getUser();
             if(user != null){
                 MCUtil.runCommand(userPower.getUser(),"particle rotp_mih:spark "+x+" "+y+" "+z+" .5 .5 .5 1 30");
