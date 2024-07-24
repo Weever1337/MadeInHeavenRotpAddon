@@ -3,6 +3,7 @@ package com.weever.rotp_mih.action.stand;
 import com.github.standobyte.jojo.action.Action;
 import com.github.standobyte.jojo.action.ActionTarget;
 import com.github.standobyte.jojo.action.stand.StandAction;
+import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
@@ -11,18 +12,18 @@ import com.weever.rotp_mih.client.ui.time_system.TimeSystemMenu;
 import com.weever.rotp_mih.init.InitStands;
 import net.minecraft.world.World;
 
-public class TimeSystemMenuStandEntityAction extends CustomStandEntityAction {
+public class TimeSystemMenuStandEntityAction extends StandEntityAction {
     public TimeSystemMenuStandEntityAction(Builder builder) {
         super(builder);
     }
 
-    @Override
-    protected Action<IStandPower> replaceAction(IStandPower power, ActionTarget target) {
-        if (GameplayUtil.getUniverseResetPlayer() == power.getUser()) {
-            return InitStands.MIH_UNIVERSE_RESET.get();
-        }
-        return super.replaceAction(power, target);
-    }
+//    @Override
+//    protected Action<IStandPower> replaceAction(IStandPower power, ActionTarget target) {
+//        if (GameplayUtil.getUniverseResetPlayer() == power.getUser()) {
+//            return InitStands.MIH_UNIVERSE_RESET.get();
+//        }
+//        return super.replaceAction(power, target);
+//    }
 
     @Override
     public void standPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {

@@ -30,7 +30,7 @@ import static com.github.standobyte.jojo.action.stand.TimeResume.userTimeStopIns
 @Mod.EventBusSubscriber(modid = RotpMadeInHeavenAddon.MOD_ID)
 public class GameplayUtil {
     private static final int TICKS_FIRST_CLICK = TimeStopInstance.TIME_RESUME_SOUND_TICKS + 1;
-    private static final Map<PlayerEntity, Integer> playerTickCounters = new HashMap<>();
+    public static final Map<PlayerEntity, Integer> playerTickCounters = new HashMap<>();
     private static TimeData globalValue = new TimeData(null, Values.NONE);
     public static void setGlobalValue(UUID player, Values val) {
         globalValue = new TimeData(player, val);
@@ -38,14 +38,15 @@ public class GameplayUtil {
     public static TimeData getGlobalValue() {
         return globalValue;
     }
+    public static int timeAccelPhase = 1;
 
-    private static PlayerEntity universeResetPlayer = null;
-    public static PlayerEntity getUniverseResetPlayer() {
-        return universeResetPlayer;
-    }
-    public static void setUniverseResetPlayer(PlayerEntity player) {
-        universeResetPlayer = player;
-    }
+//    private static PlayerEntity universeResetPlayer = null;
+//    public static PlayerEntity getUniverseResetPlayer() {
+//        return universeResetPlayer;
+//    }
+//    public static void setUniverseResetPlayer(PlayerEntity player) {
+//        universeResetPlayer = player;
+//    }
 
     public enum Values {
         NONE,
@@ -71,12 +72,25 @@ public class GameplayUtil {
                             Optional<VampirismData> data = ipower.getTypeSpecificData(ModPowers.VAMPIRISM.get());
                             vampire.set(data.isPresent());
                         });
+                        int phase = GameplayUtil.timeAccelPhase;
+                        int delenie = 1;
+                        switch (phase) {
+                            case 1: case 2: case 3: case 4: case 5:
+                                delenie = 2;
+                                break;
+                            case 6: case 7: case 8: case 9: case 10:
+                                delenie = 3;
+                                break;
+                            case 11: case 12: case 13: case 14: case 15:
+                                delenie = 4;
+                                break;
+                        }
                         if (TimeStopHandler.isTimeStopped(player.level, player.blockPosition())) {
                             playerTickCounters.putIfAbsent(player, 0);
                             int tick = playerTickCounters.get(player) + 1;
                             playerTickCounters.put(player, tick);
 
-                            if (tick >= 2 * ((TimeStopperStandStats) power.getType().getStats()).getMaxTimeStopTicks(vampire.get()) / 3) {
+                            if (tick >= 2 * ((TimeStopperStandStats) power.getType().getStats()).getMaxTimeStopTicks(vampire.get()) / delenie) {
                                 userTimeStopInstance(player.level, player, instance -> {
                                     if (instance != null) {
                                         instance.setTicksLeft(!instance.wereTicksManuallySet() && instance.getTicksLeft() > TICKS_FIRST_CLICK ? TICKS_FIRST_CLICK : 0);
@@ -102,13 +116,4 @@ public class GameplayUtil {
             }
         }
     }
-
-//    @SubscribeEvent(priority = EventPriority.LOW)
-//    public static void onWorldTick(TickEvent.WorldTickEvent event) {
-//        if (event.phase != TickEvent.Phase.END) {
-//            if (globalValue.getValue() != Values.NONE) {
-//                PlayerEntity player = event.world.getPlayerByUUID(globalValue.getPlayer().getUUID());
-//            }
-//        }
-//    }
 }

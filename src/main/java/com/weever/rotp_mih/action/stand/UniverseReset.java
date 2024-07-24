@@ -2,6 +2,7 @@ package com.weever.rotp_mih.action.stand;
 
 import com.github.standobyte.jojo.action.ActionConditionResult;
 import com.github.standobyte.jojo.action.ActionTarget;
+import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
@@ -16,7 +17,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.world.World;
 
-public class UniverseReset extends CustomStandEntityAction {
+public class UniverseReset extends StandEntityAction {
     double x;
     double y;
     double z;
@@ -33,7 +34,7 @@ public class UniverseReset extends CustomStandEntityAction {
 
     @Override
     public void standTickPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
-        if(!world.isClientSide) {
+        if(!world.isClientSide) { // todo rewrite
             LivingEntity user = userPower.getUser();
             if(user != null){
                 MCUtil.runCommand(userPower.getUser(),"particle rotp_mih:spark "+x+" "+y+" "+z+" .5 .5 .5 1 30");
@@ -55,7 +56,6 @@ public class UniverseReset extends CustomStandEntityAction {
     public void standPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
         MihEntity MiH = (MihEntity) standEntity;
         MiH.setValue(GameplayUtil.Values.NONE);
-        GameplayUtil.setUniverseResetPlayer(null);
     }
 
     @Override

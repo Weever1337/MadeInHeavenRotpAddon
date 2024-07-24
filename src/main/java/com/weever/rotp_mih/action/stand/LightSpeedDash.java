@@ -9,6 +9,7 @@ import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.weever.rotp_mih.GameplayUtil;
 import com.weever.rotp_mih.entity.stand.stands.MihEntity;
 import com.weever.rotp_mih.init.InitSounds;
+import com.weever.rotp_mih.init.InitStands;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
@@ -16,7 +17,7 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-public class LightSpeedDash extends CustomStandEntityAction {
+public class LightSpeedDash extends StandEntityAction {
     public LightSpeedDash(Builder builder) {
         super(builder.holdType(3));
     }
@@ -59,6 +60,8 @@ public class LightSpeedDash extends CustomStandEntityAction {
             if (MiH.isValue(GameplayUtil.Values.ACCELERATION)) {
                 world.playSound(null,standEntity.blockPosition(), InitSounds.MIH_DASH.get(), SoundCategory.PLAYERS,1,1);
                 world.playSound(null,standEntity.blockPosition(), InitSounds.MIH_DASH_USER.get(), SoundCategory.PLAYERS,1,1);
+            } else {
+                standPower.setCooldownTimer(InitStands.MIH_DASH.get(), 0);
             }
         }
     }

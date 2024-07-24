@@ -1,7 +1,6 @@
 package com.weever.rotp_mih.utils;
 
 import com.weever.rotp_mih.GameplayUtil;
-import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.UUID;
 

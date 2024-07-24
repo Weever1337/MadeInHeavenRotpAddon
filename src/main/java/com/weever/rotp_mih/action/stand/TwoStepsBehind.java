@@ -2,6 +2,7 @@ package com.weever.rotp_mih.action.stand;
 
 import com.github.standobyte.jojo.action.ActionConditionResult;
 import com.github.standobyte.jojo.action.ActionTarget;
+import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.init.ModStatusEffects;
@@ -10,6 +11,7 @@ import com.weever.rotp_mih.GameplayUtil;
 import com.weever.rotp_mih.entity.stand.stands.MihEntity;
 import com.weever.rotp_mih.init.InitEffects;
 import com.weever.rotp_mih.init.InitSounds;
+import com.weever.rotp_mih.init.InitStands;
 import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -22,7 +24,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
-public class TwoStepsBehind extends CustomStandEntityAction {
+public class TwoStepsBehind extends StandEntityAction {
     public TwoStepsBehind(Builder builder) {
         super(builder);
     }
@@ -52,7 +54,7 @@ public class TwoStepsBehind extends CustomStandEntityAction {
 
     @Override
     public void standTickPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
-        MihEntity MiH = (MihEntity) standEntity;
+        MihEntity MiH = (MihEntity) standEntity; // todo rewrite
         LivingEntity player = userPower.getUser();
         if (!world.isClientSide() && player != null) {
             if (!MiH.isValue(GameplayUtil.Values.ACCELERATION)) {
@@ -82,6 +84,8 @@ public class TwoStepsBehind extends CustomStandEntityAction {
         if (!world.isClientSide()) {
             if (MiH.isValue(GameplayUtil.Values.ACCELERATION)) {
                 world.playSound(null,standEntity.blockPosition(), InitSounds.MIH_TWO_STEPS.get(), SoundCategory.PLAYERS,1,1);
+            } else {
+                standPower.setCooldownTimer(InitStands.MIH_TWO_STEPS.get(), 0);
             }
         }
     }

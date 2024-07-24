@@ -38,8 +38,7 @@ public class InitStands {
     );
 
     public static final RegistryObject<StandEntityHeavyAttack> MIH_IMPALE = ACTIONS.register("mih_impale",
-            () -> new Impale(new StandEntityHeavyAttack.Builder()
-                    .standSound(InitSounds.MIH_IMPALE).shout(InitSounds.MIH_IMPALE_USER)
+            () -> new Impale(new StandEntityHeavyAttack.Builder().shout(InitSounds.MIH_IMPALE_USER)
                     .partsRequired(StandPart.ARMS))
     );
 

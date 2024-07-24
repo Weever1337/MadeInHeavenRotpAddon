@@ -1,14 +1,14 @@
 package com.weever.rotp_mih.entity.stand.stands;
 
+import com.github.standobyte.jojo.action.Action;
 import com.github.standobyte.jojo.action.ActionTarget;
 import com.github.standobyte.jojo.capability.entity.LivingUtilCapProvider;
 import com.github.standobyte.jojo.capability.world.TimeStopHandler;
-import com.github.standobyte.jojo.client.InputHandler;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityType;
 import com.github.standobyte.jojo.init.power.stand.ModStandsInit;
-import com.github.standobyte.jojo.network.PacketManager;
-import com.github.standobyte.jojo.network.packets.fromclient.ClClickActionPacket;
+import com.github.standobyte.jojo.power.IPower;
+import com.github.standobyte.jojo.util.mod.JojoModUtil;
 import com.weever.rotp_mih.GameplayUtil;
 import com.weever.rotp_mih.init.InitEffects;
 import com.weever.rotp_mih.init.InitStands;
@@ -36,6 +36,8 @@ public class MihEntity extends StandEntity {
 	int slowTick = 0;
 	int tickSlowCounter = 0;
 
+	public int getPhase() { return phase; }
+
 	private GameplayUtil.Values value;
 	public boolean isValue(GameplayUtil.Values val) {
 		return Objects.equals(val, this.value);
@@ -58,34 +60,29 @@ public class MihEntity extends StandEntity {
 				if (TimeStopHandler.isTimeStopped(level, user.blockPosition())) {
 					return;
 				}
+				long multiplier = 0;
 				if (!level.isClientSide()) {
-					long multiplier = 0;
 					ServerLevelWrapper svw = new ServerLevelWrapper(this.level);
 					TimeService timeService = new TimeService(svw);
 					if (tickCounter % 2 == 0) {
-						multiplier = 20L * phase;
+						multiplier = 20L * URphase;
 					}
-					if ((tickCounter + 1) % 75 == 0) {
-						if (phase <= 15) {
-							phase++;
-						} else {
-							if (GameplayUtil.getUniverseResetPlayer() != user) {
-								GameplayUtil.setUniverseResetPlayer((PlayerEntity) user);
-							}
-						}
+					if ((tickCounter + 1) % 100 == 0) {
 						if (URphase <= 30) {
 							URphase++;
 						} else {
 							System.out.println("Universe Reset Action");
-							RayTraceResult target = InputHandler.getInstance().mouseTarget;
-							ActionTarget actionTarget = ActionTarget.fromRayTraceResult(target);
-							ClClickActionPacket packet = new ClClickActionPacket(
-									Objects.requireNonNull(getUserPower()).getPowerClassification(), InitStands.MIH_UNIVERSE_RESET.get(), actionTarget, false
-							);
-							PacketManager.sendToServer(packet);
+							RayTraceResult rayTrace = JojoModUtil.rayTrace(user.getEyePosition(1.0F), user.getLookAngle(), 3,
+									level, user, e -> !(e.is(this) || e.is(user)), 0, 0);
+							ActionTarget target = ActionTarget.fromRayTraceResult(rayTrace);
+							IPower.getPowerOptional(user, getUserPower().getPowerClassification()).ifPresent(power -> {
+								target.resolveEntityId(level);
+								clickAction(power, InitStands.MIH_UNIVERSE_RESET.get(), false, target);
+							});
 						}
 					}
 					tickCounter++;
+					GameplayUtil.timeAccelPhase = phase;
 					if (user.isSprinting() || (user.isSwimming() && user.isInWater())) {
 						user.getCapability(LivingUtilCapProvider.CAPABILITY).ifPresent(cap -> {
 							cap.addAfterimages(3, 100);
@@ -124,12 +121,18 @@ public class MihEntity extends StandEntity {
 		tickSlowCounter = 0;
 		phase = 1;
 		URphase = 1;
+		GameplayUtil.timeAccelPhase = 1;
+	}
+
+	private <P extends IPower<P, ?>> void clickAction(IPower<?, ?> power, Action<P> action, boolean sneak, ActionTarget target) {
+		((P) power).clickAction(action, sneak, target);
 	}
 
 	public void clearAccelerationOnly() {
 		tickCounter = 0;
 		phase = 1;
 		URphase = 1;
+		GameplayUtil.timeAccelPhase = 1;
 	}
 
 	public void clearSlowOnly() {
