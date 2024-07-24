@@ -31,7 +31,6 @@ public class MihEntity extends StandEntity {
 	}
 
 	int phase = 1;
-	int URphase = 1;
 	int tickCounter = 0;
 	int slowTick = 0;
 	int tickSlowCounter = 0;
@@ -65,11 +64,11 @@ public class MihEntity extends StandEntity {
 					ServerLevelWrapper svw = new ServerLevelWrapper(this.level);
 					TimeService timeService = new TimeService(svw);
 					if (tickCounter % 2 == 0) {
-						multiplier = 20L * URphase;
+						multiplier = 20L * phase;
 					}
 					if ((tickCounter + 1) % 100 == 0) {
-						if (URphase <= 30) {
-							URphase++;
+						if (phase <= 30) {
+							phase++;
 						} else {
 							System.out.println("Universe Reset Action");
 							RayTraceResult rayTrace = JojoModUtil.rayTrace(user.getEyePosition(1.0F), user.getLookAngle(), 3,
@@ -120,7 +119,6 @@ public class MihEntity extends StandEntity {
 		tickCounter = 0;
 		tickSlowCounter = 0;
 		phase = 1;
-		URphase = 1;
 		GameplayUtil.timeAccelPhase = 1;
 	}
 
@@ -131,7 +129,6 @@ public class MihEntity extends StandEntity {
 	public void clearAccelerationOnly() {
 		tickCounter = 0;
 		phase = 1;
-		URphase = 1;
 		GameplayUtil.timeAccelPhase = 1;
 	}
 
