@@ -6,11 +6,11 @@ import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
-import com.weever.rotp_mih.GameplayUtil;
-import com.weever.rotp_mih.entity.stand.stands.MihEntity;
 import com.weever.rotp_mih.init.InitParticles;
 import com.weever.rotp_mih.init.InitSounds;
 import com.weever.rotp_mih.init.InitStands;
+import com.weever.rotp_mih.power.impl.stand.type.MadeInHeavenStandType;
+import com.weever.rotp_mih.utils.TimeUtil;
 import com.weever.rotp_mih.utils.ParticleUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,7 +26,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.Vector;
 
 public class ThroatSlice extends StandEntityAction {
     private static final double RANGE = 7.0;
@@ -45,9 +44,9 @@ public class ThroatSlice extends StandEntityAction {
     @Override
     public void standPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
         LivingEntity user = userPower.getUser();
-        MihEntity mihEntity = (MihEntity) standEntity;
         if (!world.isClientSide()) {
-            if (!mihEntity.isValue(GameplayUtil.Values.ACCELERATION)) {
+            userPower.getType();
+            if (!MadeInHeavenStandType.isValue(TimeUtil.Values.ACCELERATION)) {
                 ((PlayerEntity) user).displayClientMessage(new TranslationTextComponent("rotp_mih.message.action_condition.cant_use_without_timeaccel"), true);
                 return;
             }
@@ -68,8 +67,8 @@ public class ThroatSlice extends StandEntityAction {
 
     @Override
     public void onTaskSet(World world, StandEntity standEntity, IStandPower userPower, Phase phase, StandEntityTask task, int ticks) {
-        MihEntity MiH = (MihEntity) standEntity;
-        if (MiH.isValue(GameplayUtil.Values.ACCELERATION)) {
+        userPower.getType();
+        if (MadeInHeavenStandType.isValue(TimeUtil.Values.ACCELERATION)) {
             if (!world.isClientSide()) {
                 world.playSound(null, standEntity.blockPosition(), InitSounds.MIH_THROAT_SLICE.get(), SoundCategory.PLAYERS, 1, 1);
             }

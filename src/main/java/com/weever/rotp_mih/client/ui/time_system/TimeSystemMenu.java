@@ -10,7 +10,7 @@ import com.github.standobyte.jojo.power.IPower;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.weever.rotp_mih.RotpMadeInHeavenAddon;
+import com.weever.rotp_mih.MadeInHeavenAddon;
 import com.weever.rotp_mih.init.InitStands;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.chat.NarratorChatListener;
@@ -37,7 +37,7 @@ public class TimeSystemMenu extends Screen { // Weather Report && Kraft Work Ref
     private final List<TimeSystemMenu.SelectorWidget> slots = Lists.newArrayList();
     private static final ITextComponent SELECT_TYPE = new TranslationTextComponent("rotp_mih.select_time_system").withStyle(TextFormatting.WHITE);
     private static final ITextComponent EMPTY = new TranslationTextComponent("empty", (new TranslationTextComponent("")));
-    public static final ResourceLocation MENU = new ResourceLocation(RotpMadeInHeavenAddon.MOD_ID, "textures/gui/time_system.png");
+    public static final ResourceLocation MENU = new ResourceLocation(MadeInHeavenAddon.MOD_ID, "textures/gui/time_system.png");
 
     public TimeSystemMenu() {
         super(NarratorChatListener.NO_TITLE);
@@ -146,8 +146,6 @@ public class TimeSystemMenu extends Screen { // Weather Report && Kraft Work Ref
             StandEntityAction action;
             if (hovered.get() == Type.ACCELERATION) {
                 action = InitStands.MIH_TIME_SYSTEM_ACCELERATION.get();
-            } else if (hovered.get() == Type.SLOW) {
-                action = InitStands.MIH_TIME_SYSTEM_SLOW.get();
             } else {
                 action = InitStands.MIH_TIME_SYSTEM_CLEAR.get();
             }
@@ -161,8 +159,7 @@ public class TimeSystemMenu extends Screen { // Weather Report && Kraft Work Ref
 
     public enum Type {
         CLEAR(new TranslationTextComponent("timeSystem.clear"), "none"),
-        ACCELERATION(new TranslationTextComponent("timeSystem.acceleration").withStyle(TextFormatting.LIGHT_PURPLE), "acceleration"),
-        SLOW(new TranslationTextComponent("timeSystem.slow").withStyle(TextFormatting.RED), "slow");
+        ACCELERATION(new TranslationTextComponent("timeSystem.acceleration").withStyle(TextFormatting.LIGHT_PURPLE), "acceleration");
 
         public static final Type[] VALUES = values();
         final ITextComponent name;
@@ -191,8 +188,6 @@ public class TimeSystemMenu extends Screen { // Weather Report && Kraft Work Ref
                     return Optional.of(CLEAR);
                 case ACCELERATION:
                     return Optional.of(ACCELERATION);
-                case SLOW:
-                    return Optional.of(SLOW);
                 default:
                     return Optional.empty();
             }
@@ -237,9 +232,7 @@ public class TimeSystemMenu extends Screen { // Weather Report && Kraft Work Ref
             textureManager.bind(MENU);
             matrixStack.pushPose();
             matrixStack.translate(this.x, this.y, 0.0D);
-            if (icon == Type.SLOW) {
-                blit(matrixStack, 0, 0, 75.0F, 0.0F, 25, 25, 128, 128);
-            } else if (icon == Type.CLEAR) {
+            if (icon == Type.CLEAR) {
                 blit(matrixStack, 0, 0, 100.0F, 0.0F, 25, 25, 128, 128);
             } else {
                 blit(matrixStack, 0, 0, 25.0F, 0.0F, 25, 25, 128, 128);

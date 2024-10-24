@@ -7,11 +7,12 @@ import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.init.ModStatusEffects;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
-import com.weever.rotp_mih.GameplayUtil;
-import com.weever.rotp_mih.entity.stand.stands.MihEntity;
+import com.weever.rotp_mih.MadeInHeavenAddon;
 import com.weever.rotp_mih.init.InitEffects;
 import com.weever.rotp_mih.init.InitSounds;
 import com.weever.rotp_mih.init.InitStands;
+import com.weever.rotp_mih.power.impl.stand.type.MadeInHeavenStandType;
+import com.weever.rotp_mih.utils.TimeUtil;
 import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -54,35 +55,47 @@ public class TwoStepsBehind extends StandEntityAction {
 
     @Override
     public void standTickPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
-        MihEntity MiH = (MihEntity) standEntity; // todo rewrite
         LivingEntity player = userPower.getUser();
         if (!world.isClientSide() && player != null) {
-            if (!MiH.isValue(GameplayUtil.Values.ACCELERATION)) {
-                ((PlayerEntity) player).displayClientMessage(new TranslationTextComponent("rotp_mih.message.action_condition.cant_use_without_timeaccel"), true);
-                return;
-            }
             Entity entity = task.getTarget().getEntity();
-            Vector3d targetPos = getBackCoordinates((LivingEntity) entity, 1);
-            double x = targetPos.x;
-            double y = entity.getY();
-            double z = targetPos.z;
-
-            userPower.getUser().moveTo(x, y, z);
-            userPower.getUser().lookAt(EntityAnchorArgument.Type.EYES, entity.getEyePosition(1));
-            entity.hurt(DamageSource.playerAttack((PlayerEntity) userPower.getUser()), 5);
-            if (!((LivingEntity) entity).hasEffect(InitEffects.BLEEDING.get())) {
-                ((LivingEntity) entity).addEffect(new EffectInstance(InitEffects.BLEEDING.get(), 100, 1, false, false, true));
-                ((LivingEntity) entity).addEffect(new EffectInstance(ModStatusEffects.MISSHAPEN_FACE.get(), 100, 1, false, false, true));
-                ((LivingEntity) entity).addEffect(new EffectInstance(Effects.BLINDNESS, 100, 1, false, false, true));
+            if (entity != null) {
+                if (entity instanceof LivingEntity) {
+                    IStandPower.getStandPowerOptional(((LivingEntity) entity)).ifPresent(standPower -> {
+                        if (standPower.getType() == null) {
+                            standPower.givePower(InitStands.MIH.getStandType());
+                            standPower.toggleSummon();
+                        }
+                        MadeInHeavenAddon.LOGGER.warn(standPower.getType());
+                    });
+                }
             }
+            // userPower.getType();
+            // if (!MadeInHeavenStandType.isValue(TimeUtil.Values.ACCELERATION)) {
+            //     ((PlayerEntity) player).displayClientMessage(new TranslationTextComponent("rotp_mih.message.action_condition.cant_use_without_timeaccel"), true);
+            //     return;
+            // }
+            // Entity entity = task.getTarget().getEntity();
+            // Vector3d targetPos = getBackCoordinates((LivingEntity) entity, 1);
+            // double x = targetPos.x;
+            // double y = entity.getY();
+            // double z = targetPos.z;
+
+            // userPower.getUser().moveTo(x, y, z);
+            // userPower.getUser().lookAt(EntityAnchorArgument.Type.EYES, entity.getEyePosition(1));
+            // entity.hurt(DamageSource.playerAttack((PlayerEntity) userPower.getUser()), 5);
+            // if (!((LivingEntity) entity).hasEffect(InitEffects.BLEEDING.get())) {
+            //     ((LivingEntity) entity).addEffect(new EffectInstance(InitEffects.BLEEDING.get(), 100, 1, false, false, true));
+            //     ((LivingEntity) entity).addEffect(new EffectInstance(ModStatusEffects.MISSHAPEN_FACE.get(), 100, 1, false, false, true));
+            //     ((LivingEntity) entity).addEffect(new EffectInstance(Effects.BLINDNESS, 100, 1, false, false, true));
+            // }
         }
     }
 
     @Override
     public void onTaskSet(World world, StandEntity standEntity, IStandPower standPower, Phase phase, StandEntityTask task, int ticks) {
-        MihEntity MiH = (MihEntity) standEntity;
         if (!world.isClientSide()) {
-            if (MiH.isValue(GameplayUtil.Values.ACCELERATION)) {
+            standPower.getType();
+            if (MadeInHeavenStandType.isValue(TimeUtil.Values.ACCELERATION)) {
                 world.playSound(null,standEntity.blockPosition(), InitSounds.MIH_TWO_STEPS.get(), SoundCategory.PLAYERS,1,1);
             } else {
                 standPower.setCooldownTimer(InitStands.MIH_TWO_STEPS.get(), 0);

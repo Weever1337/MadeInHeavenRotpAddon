@@ -17,7 +17,6 @@
   "rotp_mih.subtitle.madeinheaven_summon": "\"Made in Heaven!\"",
   "effect.rotp_mih.bleeding": "Кровотеча",
   "effect.rotp_mih.acceleration": "Прискорення",
-  "jojo.command.desc.cum": "Змусити гравця кінчити // Додано в аддон Made in Heaven",
 
   "timeSystem.clear": "Очистити",
   "timeSystem.acceleration": "Прискорення часу",
@@ -26,5 +25,6 @@
 
   "rotp_mih.message.action_condition.cant_use_without_timeaccel": "Ви не можете використовувати цю дію без прискорення часу",
   "rotp_mih.message.action_condition.already_time_manipulation": "Хтось вже маніпулює часом",
-  "rotp_mih.message.action_condition.already_cleared": "Уже немає маніпуляцій із часом"
-}
+  "rotp_mih.message.action_condition.already_cleared": "Уже немає маніпуляцій із часом",
+    "death.attack.rotp_mih_bleeding": "%1$s стік кров'ю"
+  }

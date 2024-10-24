@@ -6,25 +6,24 @@ import com.github.standobyte.jojo.entity.stand.StandEntityType;
 import com.github.standobyte.jojo.init.power.stand.EntityStandRegistryObject;
 import com.github.standobyte.jojo.power.impl.stand.StandInstance.StandPart;
 import com.github.standobyte.jojo.power.impl.stand.stats.StandStats;
-import com.github.standobyte.jojo.power.impl.stand.type.EntityStandType;
 import com.github.standobyte.jojo.power.impl.stand.type.StandType;
 import com.github.standobyte.jojo.util.mod.StoryPart;
-import com.weever.rotp_mih.RotpMadeInHeavenAddon;
+import com.weever.rotp_mih.MadeInHeavenAddon;
 import com.weever.rotp_mih.action.stand.*;
 import com.weever.rotp_mih.action.stand.gui.TimeSystemReleaseAcceleration;
 import com.weever.rotp_mih.action.stand.gui.TimeSystemReleaseClear;
-import com.weever.rotp_mih.action.stand.gui.TimeSystemReleaseSlow;
 import com.weever.rotp_mih.entity.stand.stands.MihEntity;
+import com.weever.rotp_mih.power.impl.stand.type.MadeInHeavenStandType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 public class InitStands {
     @SuppressWarnings("unchecked")
     public static final DeferredRegister<Action<?>> ACTIONS = DeferredRegister.create(
-            (Class<Action<?>>) ((Class<?>) Action.class), RotpMadeInHeavenAddon.MOD_ID);
+            (Class<Action<?>>) ((Class<?>) Action.class), MadeInHeavenAddon.MOD_ID);
     @SuppressWarnings("unchecked")
     public static final DeferredRegister<StandType<?>> STANDS = DeferredRegister.create(
-            (Class<StandType<?>>) ((Class<?>) StandType.class), RotpMadeInHeavenAddon.MOD_ID);
+            (Class<StandType<?>>) ((Class<?>) StandType.class), MadeInHeavenAddon.MOD_ID);
 
     // ======================================== Made In Heaven! ========================================
 
@@ -103,20 +102,13 @@ public class InitStands {
             )
     );
 
-    public static final RegistryObject<StandEntityAction> MIH_TIME_SYSTEM_SLOW = ACTIONS.register("mih_time_system_slow",
-            () -> new TimeSystemReleaseSlow(new StandEntityAction.Builder()
-                    .partsRequired(StandPart.MAIN_BODY)
-                    .ignoresPerformerStun()
-            )
-    );
-
     public static final RegistryObject<StandEntityAction> MIH_BLOCK = ACTIONS.register("mih_block",
             () -> new StandEntityBlock());
 
-    public static final EntityStandRegistryObject<EntityStandType<StandStats>, StandEntityType<MihEntity>> MIH =
+    public static final EntityStandRegistryObject<MadeInHeavenStandType<StandStats>, StandEntityType<MihEntity>> MIH =
             new EntityStandRegistryObject<>("madeinheaven",
                     STANDS,
-                    () -> new EntityStandType.Builder<>()
+                    () -> new MadeInHeavenStandType.Builder<>()
                             .color(0xD3D5E1)
                             .storyPartName(StoryPart.STONE_OCEAN.getName())
                             .leftClickHotbar(

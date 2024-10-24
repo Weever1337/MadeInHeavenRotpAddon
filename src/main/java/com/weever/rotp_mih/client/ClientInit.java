@@ -2,7 +2,7 @@ package com.weever.rotp_mih.client;
 
 import com.github.standobyte.jojo.client.particle.custom.CustomParticlesHelper;
 import com.github.standobyte.jojo.client.resources.CustomResources;
-import com.weever.rotp_mih.RotpMadeInHeavenAddon;
+import com.weever.rotp_mih.MadeInHeavenAddon;
 import com.weever.rotp_mih.client.particle.CumParticle;
 import com.weever.rotp_mih.client.particle.SparkParticle;
 import com.weever.rotp_mih.client.render.entity.renderer.stand.MihRenderer;
@@ -16,7 +16,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-@EventBusSubscriber(modid = RotpMadeInHeavenAddon.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = MadeInHeavenAddon.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientInit {
     @SubscribeEvent
     public static void onFMLClientSetup(FMLClientSetupEvent event) {

@@ -6,10 +6,10 @@ import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
-import com.weever.rotp_mih.GameplayUtil;
-import com.weever.rotp_mih.entity.stand.stands.MihEntity;
 import com.weever.rotp_mih.init.InitSounds;
 import com.weever.rotp_mih.init.InitStands;
+import com.weever.rotp_mih.power.impl.stand.type.MadeInHeavenStandType;
+import com.weever.rotp_mih.utils.TimeUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
@@ -31,9 +31,8 @@ public class LightSpeedDash extends StandEntityAction {
     @Override
     public void standTickPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
         LivingEntity user = userPower.getUser();
-        MihEntity MiH = (MihEntity) standEntity;
         if (!world.isClientSide()) {
-            if (!MiH.isValue(GameplayUtil.Values.ACCELERATION)) {
+            if (!MadeInHeavenStandType.isValue(TimeUtil.Values.ACCELERATION)) {
                 ((PlayerEntity) user).displayClientMessage(new TranslationTextComponent("rotp_mih.message.action_condition.cant_use_without_timeaccel"), true);
                 return;
             }
@@ -55,9 +54,9 @@ public class LightSpeedDash extends StandEntityAction {
 
     @Override
     public void onTaskSet(World world, StandEntity standEntity, IStandPower standPower, Phase phase, StandEntityTask task, int ticks) {
-        MihEntity MiH = (MihEntity) standEntity;
         if (!world.isClientSide()) {
-            if (MiH.isValue(GameplayUtil.Values.ACCELERATION)) {
+            standPower.getType();
+            if (MadeInHeavenStandType.isValue(TimeUtil.Values.ACCELERATION)) {
                 world.playSound(null,standEntity.blockPosition(), InitSounds.MIH_DASH.get(), SoundCategory.PLAYERS,1,1);
                 world.playSound(null,standEntity.blockPosition(), InitSounds.MIH_DASH_USER.get(), SoundCategory.PLAYERS,1,1);
             } else {

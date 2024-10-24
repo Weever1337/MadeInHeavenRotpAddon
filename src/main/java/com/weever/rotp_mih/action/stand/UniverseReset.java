@@ -6,15 +6,19 @@ import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
-import com.github.standobyte.jojo.util.mc.MCUtil;
-import com.weever.rotp_mih.GameplayUtil;
 import com.weever.rotp_mih.entity.stand.stands.MihEntity;
+import com.weever.rotp_mih.init.InitParticles;
+import com.weever.rotp_mih.power.impl.stand.type.MadeInHeavenStandType;
+import com.weever.rotp_mih.utils.GameplayUtil;
+import com.weever.rotp_mih.utils.ParticleUtils;
+import com.weever.rotp_mih.utils.TimeUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityPredicates;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class UniverseReset extends StandEntityAction {
@@ -34,10 +38,9 @@ public class UniverseReset extends StandEntityAction {
 
     @Override
     public void standTickPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
-        if(!world.isClientSide) { // todo rewrite
+        if (!world.isClientSide) {
             LivingEntity user = userPower.getUser();
             if(user != null){
-                MCUtil.runCommand(userPower.getUser(),"particle rotp_mih:spark "+x+" "+y+" "+z+" .5 .5 .5 1 30");
                 world.getEntitiesOfClass(LivingEntity.class, user.getBoundingBox().inflate(31), EntityPredicates.ENTITY_STILL_ALIVE).forEach(
                         livingEntity -> {
                             if (livingEntity == user || livingEntity instanceof MihEntity) return;
@@ -49,13 +52,15 @@ public class UniverseReset extends StandEntityAction {
                 );
             }
         }
+        if (world.isClientSide()) {
+            ParticleUtils.createBlackHole(InitParticles.SPARK.get(), new Vector3d(x, y, z), world, 5, 10, 20, 3, 0.05f);
+        }
     }
 
 
     @Override
     public void standPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
-        MihEntity MiH = (MihEntity) standEntity;
-        MiH.setValue(GameplayUtil.Values.NONE);
+        ((MadeInHeavenStandType<?>) userPower.getType()).setValue(TimeUtil.Values.NONE);
     }
 
     @Override

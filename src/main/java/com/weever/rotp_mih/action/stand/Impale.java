@@ -8,8 +8,6 @@ import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.github.standobyte.jojo.util.mc.damage.StandEntityDamageSource;
-import com.weever.rotp_mih.GameplayUtil;
-import com.weever.rotp_mih.entity.stand.stands.MihEntity;
 import com.weever.rotp_mih.init.InitEffects;
 import com.weever.rotp_mih.init.InitSounds;
 import net.minecraft.entity.Entity;

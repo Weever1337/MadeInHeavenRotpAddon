@@ -18,7 +18,6 @@
 
   "effect.rotp_mih.bleeding": "Bleeding",
   "effect.rotp_mih.acceleration": "Acceleration",
-  "jojo.command.desc.cum": "Make a player cumming // Added in Made in Heaven addon",
 
   "timeSystem.clear": "Clear",
   "timeSystem.acceleration": "Time Acceleration",
@@ -27,5 +26,6 @@
 
   "rotp_mih.message.action_condition.cant_use_without_timeaccel": "You can not use this action without time acceleration",
   "rotp_mih.message.action_condition.already_time_manipulation": "Someone already manipulating time",
-  "rotp_mih.message.action_condition.already_cleared": "There's no more time manipulation"
+  "rotp_mih.message.action_condition.already_cleared": "There's no more time manipulation",
+  "death.attack.rotp_mih_bleeding": "%1$s bled out"
 }

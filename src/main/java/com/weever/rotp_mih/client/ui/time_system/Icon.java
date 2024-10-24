@@ -1,13 +1,13 @@
 package com.weever.rotp_mih.client.ui.time_system;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.weever.rotp_mih.RotpMadeInHeavenAddon;
+import com.weever.rotp_mih.MadeInHeavenAddon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
 
 public class Icon {
-    private static final ResourceLocation GUI = new ResourceLocation(RotpMadeInHeavenAddon.MOD_ID, "textures/gui/time_system.png");
+    private static final ResourceLocation GUI = new ResourceLocation(MadeInHeavenAddon.MOD_ID, "textures/gui/time_system.png");
 
     public static void renderVanillaIcon(TimeSystemMenu.Type type, MatrixStack matrixStack, int x, int y) {
         Minecraft.getInstance().getTextureManager().bind(GUI);
@@ -17,7 +17,6 @@ public class Icon {
     public static int getUByVanillaTimeSystem(TimeSystemMenu.Type type) { // x
         switch (type) {
             case CLEAR:
-            case SLOW:
             case ACCELERATION:
                 return 2;
             default:
@@ -31,8 +30,6 @@ public class Icon {
                 return 48;
             case ACCELERATION:
                 return 26;
-            case SLOW:
-                return 68;
             default:
                 return 31;
         }
