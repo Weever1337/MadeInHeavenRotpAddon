@@ -15,16 +15,8 @@
   "action.rotp_mih.mih_block": "Блокировать",
 
   "rotp_mih.subtitle.madeinheaven_summon": "\"Made in Heaven!\"",
-  "effect.rotp_mih.bleeding": "Кровотечение",
-  "effect.rotp_mih.acceleration": "Ускорение",
-
-  "timeSystem.clear": "Очистить",
-  "timeSystem.acceleration": "Ускорить Время",
-  "timeSystem.slow": "Замедлить Время",
-  "rotp_mih.select_time_system": "Выберите Манипуляцию Временем",
 
   "rotp_mih.message.action_condition.cant_use_without_timeaccel": "Вы не можете использовать это действие без ускорения времени",
   "rotp_mih.message.action_condition.already_time_manipulation": "Кто-то уже манипулирует временем",
-  "rotp_mih.message.action_condition.already_cleared": "Уже нету манипуляций с временем",
-  "death.attack.rotp_mih_bleeding": "%1$s истёк кровью"
+  "rotp_mih.message.action_condition.already_cleared": "Уже нету манипуляций с временем"
 }

@@ -1,27 +1,8 @@
 package com.weever.rotp_mih.utils;
 
-import com.weever.rotp_mih.data.TimeSystemData;
 import net.minecraft.entity.projectile.ProjectileEntity;
 
-import java.util.UUID;
-
 public class TimeUtil {
-    private static TimeSystemData globalValue = new TimeSystemData(null, Values.NONE);
-    public enum Values {
-        NONE,
-        ACCELERATION
-    }
-
-    public static void setGlobalValue(UUID player, Values val) {
-        globalValue = new TimeSystemData(player, val);
-    }
-
-    public static TimeSystemData getGlobalValue() {
-        return globalValue;
-    }
-
-    public static int timeAccelPhase = 1;
-
     public static void multiplyProjectileSpeed(ProjectileEntity projectile, int n) {
         double motionX = projectile.getDeltaMovement().x;
         double motionY = projectile.getDeltaMovement().y;
@@ -30,8 +11,7 @@ public class TimeUtil {
         projectile.setDeltaMovement(motionX * n, motionY * n, motionZ * n);
     }
 
-    public static int getCalculatedPhase() {
-        int phase = timeAccelPhase;
+    public static int getCalculatedPhase(int phase) {
         int multiply;
         switch (phase) {
             case 1: case 2: case 3: case 4: case 5:

@@ -39,23 +39,7 @@ public class SparkParticle extends SpriteTexturedParticle {
         if (age++ >= lifetime) {
             remove();
         }
-    } // like a purple haze but no
-
-//    @Override // CUM CODE🎉🎉🎉🎉
-//    public void tick() {
-//        this.quadSize *= 0.05f;
-//
-//        xo = x;
-//        yo = y;
-//        zo = z;
-//
-//        oRoll = roll;
-//
-//        move(xd, yd, zd);
-//
-//        if (this.age++ >= this.lifetime)
-//            this.remove();
-//    }
+    }
 
     public static class Factory implements IParticleFactory<BasicParticleType> {
         private final IAnimatedSprite spriteSet;

@@ -1,12 +1,12 @@
-package com.weever.rotp_mih.client.render.entity.model.stand;
+package com.weever.rotp_mih.client.render;
 
 import com.github.standobyte.jojo.client.render.entity.model.stand.HumanoidStandModel;
 import com.github.standobyte.jojo.client.render.entity.pose.ModelPose;
 import com.github.standobyte.jojo.client.render.entity.pose.RotationAngle;
-import com.weever.rotp_mih.entity.stand.stands.MihEntity;
+import com.weever.rotp_mih.entity.MadeInHeavenEntity;
 import net.minecraft.client.renderer.model.ModelRenderer;
 
-public class MihModel extends HumanoidStandModel<MihEntity> {
+public class MadeInHeavenModel extends HumanoidStandModel<MadeInHeavenEntity> {
     private final ModelRenderer cube_r1;
     private final ModelRenderer cube_r2;
     private final ModelRenderer cube_r3;
@@ -25,7 +25,7 @@ public class MihModel extends HumanoidStandModel<MihEntity> {
     private final ModelRenderer rightLowerLeg2;
     private final ModelRenderer saddle;
 
-    public MihModel() {
+    public MadeInHeavenModel() {
         super();
 
         addHumanoidBaseBoxes(null);
@@ -180,7 +180,7 @@ public class MihModel extends HumanoidStandModel<MihEntity> {
 
 
     @Override
-    protected ModelPose<MihEntity> initIdlePose() {
+    protected ModelPose<MadeInHeavenEntity> initIdlePose() {
         return new ModelPose<>(new RotationAngle[] {
                 RotationAngle.fromDegrees(horse,50f, 0f, 0f),
                 RotationAngle.fromDegrees(line,-42.5f, 0f, 0f),

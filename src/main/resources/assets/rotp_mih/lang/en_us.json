@@ -4,28 +4,15 @@
 
   "action.rotp_mih.mih_punch": "Punch",
   "action.rotp_mih.mih_heavy_punch": "Heavy Punch",
-  "action.rotp_mih.mih_impale": "Impale",
+  "action.rotp_mih.mih_chop": "Chop",
   "action.rotp_mih.mih_barrage": "Barrage",
 
   "action.rotp_mih.mih_dash": "Light Speed Dash",
-  "action.rotp_mih.mih_two_steps": "Two Steps Behind",
-  "action.rotp_mih.mih_time_system": "Time System",
   "action.rotp_mih.mih_universe_reset": "Universe Reset",
-  "action.rotp_mih.mih_throat_slice": "Throat Slice",
   "action.rotp_mih.mih_block": "Block",
-
   "rotp_mih.subtitle.madeinheaven_summon": "\"Made in heaven!\"",
-
-  "effect.rotp_mih.bleeding": "Bleeding",
-  "effect.rotp_mih.acceleration": "Acceleration",
-
-  "timeSystem.clear": "Clear",
-  "timeSystem.acceleration": "Time Acceleration",
-  "timeSystem.slow": "Slow Time",
-  "rotp_mih.select_time_system": "Select Time Manipulation",
 
   "rotp_mih.message.action_condition.cant_use_without_timeaccel": "You can not use this action without time acceleration",
   "rotp_mih.message.action_condition.already_time_manipulation": "Someone already manipulating time",
-  "rotp_mih.message.action_condition.already_cleared": "There's no more time manipulation",
-  "death.attack.rotp_mih_bleeding": "%1$s bled out"
+  "rotp_mih.message.action_condition.already_cleared": "There's no more time manipulation"
 }

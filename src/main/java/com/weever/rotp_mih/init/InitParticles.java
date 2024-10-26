@@ -11,5 +11,4 @@ public class InitParticles {
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, MadeInHeavenAddon.MOD_ID);
 
     public static final RegistryObject<BasicParticleType> SPARK = PARTICLES.register("spark", () -> new BasicParticleType(false));
-    public static final RegistryObject<BasicParticleType> CUM = PARTICLES.register("cum", () -> new BasicParticleType(false));
 }

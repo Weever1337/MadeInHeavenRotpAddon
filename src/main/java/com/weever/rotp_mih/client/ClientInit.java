@@ -2,10 +2,11 @@ package com.weever.rotp_mih.client;
 
 import com.github.standobyte.jojo.client.particle.custom.CustomParticlesHelper;
 import com.github.standobyte.jojo.client.resources.CustomResources;
+import com.github.standobyte.jojo.client.ui.standstats.StandStatsRenderer;
+import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.weever.rotp_mih.MadeInHeavenAddon;
-import com.weever.rotp_mih.client.particle.CumParticle;
 import com.weever.rotp_mih.client.particle.SparkParticle;
-import com.weever.rotp_mih.client.render.entity.renderer.stand.MihRenderer;
+import com.weever.rotp_mih.client.render.MadeInHeavenRenderer;
 import com.weever.rotp_mih.init.InitParticles;
 import com.weever.rotp_mih.init.InitStands;
 import net.minecraft.client.Minecraft;
@@ -21,14 +22,24 @@ public class ClientInit {
     @SubscribeEvent
     public static void onFMLClientSetup(FMLClientSetupEvent event) {
         RenderingRegistry.registerEntityRenderingHandler(
-                InitStands.MIH.getEntityType(), MihRenderer::new);
+                InitStands.MADE_IN_HEAVEN.getEntityType(), MadeInHeavenRenderer::new);
+        StandStatsRenderer.overrideCosmeticStats(
+                InitStands.MADE_IN_HEAVEN.getStandType().getRegistryName(),
+                new StandStatsRenderer.ICosmeticStandStats() {
+                    @Override
+                    public String statRankLetter(StandStatsRenderer.StandStat stat, IStandPower standData, double statConvertedValue) {
+                        if (stat == StandStatsRenderer.StandStat.SPEED) {
+                            return "∞";
+                        }
+                        return StandStatsRenderer.ICosmeticStandStats.super.statRankLetter(stat, standData, statConvertedValue);
+                    }
+                });
     }
 
     @SubscribeEvent
     public static void onMcConstructor(ParticleFactoryRegisterEvent event) {
         Minecraft mc = Minecraft.getInstance();
         mc.particleEngine.register(InitParticles.SPARK.get(), SparkParticle.Factory::new);
-        mc.particleEngine.register(InitParticles.CUM.get(), CumParticle.Factory::new);
         CustomParticlesHelper.saveSprites(mc);
         CustomResources.initCustomResourceManagers(mc);
     }
