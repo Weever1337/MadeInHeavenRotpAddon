@@ -21,6 +21,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public class ClientInit {
     @SubscribeEvent
     public static void onFMLClientSetup(FMLClientSetupEvent event) {
+        Minecraft mc = event.getMinecraftSupplier().get();
+
         RenderingRegistry.registerEntityRenderingHandler(
                 InitStands.MADE_IN_HEAVEN.getEntityType(), MadeInHeavenRenderer::new);
         StandStatsRenderer.overrideCosmeticStats(
@@ -34,6 +36,7 @@ public class ClientInit {
                         return StandStatsRenderer.ICosmeticStandStats.super.statRankLetter(stat, standData, statConvertedValue);
                     }
                 });
+        ClientEventHandler.init(mc);
     }
 
     @SubscribeEvent

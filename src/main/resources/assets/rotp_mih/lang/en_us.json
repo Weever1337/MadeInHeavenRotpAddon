@@ -10,6 +10,11 @@
   "action.rotp_mih.mih_dash": "Light Speed Dash",
   "action.rotp_mih.mih_universe_reset": "Universe Reset",
   "action.rotp_mih.mih_block": "Block",
+  "action.rotp_mih.mih_time_system.cast": "Time System: %s",
+
+  "rotp_mih.time_system.acceleration": "Acceleration",
+  "rotp_mih.time_system.clear": "Clear",
+
   "rotp_mih.subtitle.madeinheaven_summon": "\"Made in heaven!\"",
 
   "rotp_mih.message.action_condition.cant_use_without_timeaccel": "You can not use this action without time acceleration",

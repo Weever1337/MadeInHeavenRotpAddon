@@ -6,9 +6,8 @@
   "minVersion": "0.8",
   "mixins": [
     "CrashReportLOL",
-    "ItemUseMixin",
-    "ShootableItemMixin",
-    "TimeStopMixin"
+    "TimeStopMixin",
+    "ProjectileEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

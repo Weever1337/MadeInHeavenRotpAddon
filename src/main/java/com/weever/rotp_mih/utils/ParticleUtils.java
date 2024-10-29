@@ -111,14 +111,13 @@ public class ParticleUtils {
         for (int loop = 0; loop < loops; loop++) {
             double loopProgress = (double) loop / (double) loops;
 
-            for (int i = 0; i < particlesPerLoop; i++) {
+            for (int i = 0; i < particlesPerLoop; i++) { // btw, nevernight - good luck. I think, you understand, what I mean with comments below (because I forgot to remove after a "lesson" with math) =)
                 double angle = 2 * Math.PI * i / particlesPerLoop;
-                double spiralRadius = radius * (1 - loopProgress); // Decrease radius with each loop
+                double spiralRadius = radius * (1 - loopProgress);
                 double x = center.x + spiralRadius * MathHelper.cos((float) angle);
                 double z = center.z + spiralRadius * MathHelper.sin((float) angle);
-                double y = center.y + height * loopProgress; // Adjust height with each loop
+                double y = center.y + height * loopProgress;
 
-                // Generate some motion vector
                 double motionX = -spiralRadius * MathHelper.cos((float) angle) * speed;
                 double motionY = -height * loopProgress * speed;
                 double motionZ = -spiralRadius * MathHelper.sin((float) angle) * speed;

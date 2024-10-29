@@ -1,4 +1,4 @@
-package com.weever.rotp_mih.capability;
+package com.weever.rotp_mih.capability.world;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;

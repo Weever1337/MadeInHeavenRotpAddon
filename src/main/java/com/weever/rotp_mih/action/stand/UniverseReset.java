@@ -6,20 +6,19 @@ import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
-import com.weever.rotp_mih.capability.WorldCap;
-import com.weever.rotp_mih.capability.WorldCapProvider;
+import com.weever.rotp_mih.capability.world.WorldCapProvider;
 import com.weever.rotp_mih.entity.MadeInHeavenEntity;
 import com.weever.rotp_mih.init.InitParticles;
 import com.weever.rotp_mih.utils.ParticleUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public class UniverseReset extends StandEntityAction {
     double x;
@@ -60,12 +59,8 @@ public class UniverseReset extends StandEntityAction {
 
     @Override
     public void standPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
-        if (userPower.getUser() instanceof ServerPlayerEntity) {
-            ServerPlayerEntity player = (ServerPlayerEntity) userPower.getUser();
-            WorldCapProvider.getWorldCap(player).setTimeManipulatorUUID(null);
-            WorldCapProvider.getWorldCap(player).setTimeData(WorldCap.TimeData.NONE);
-            WorldCapProvider.getWorldCap(player).setTimeAccelerationPhase(0);
-            WorldCapProvider.getWorldCap(player).setTickCounter(0);
+        if (!world.isClientSide()) {
+            WorldCapProvider.getWorldCap((ServerWorld) world).setTimeManipulatorUUID(null);
         }
     }
 

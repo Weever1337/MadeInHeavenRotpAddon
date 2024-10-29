@@ -1,8 +1,13 @@
-package com.weever.rotp_mih.capability;
+package com.weever.rotp_mih.capability.world;
 
 import com.github.standobyte.jojo.util.mc.MCUtil;
+import com.weever.rotp_mih.network.AddonPackets;
+import com.weever.rotp_mih.network.fromserver.ServerIdPacket;
+import com.weever.rotp_mih.network.fromserver.SyncWorldCapPacket;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.server.ServerWorld;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -23,26 +28,28 @@ public class WorldCap {
     }
 
     public void tick() {
-        System.out.println("haha");
         if (!world.isClientSide()) {
             if ((timeManipulatorUUID == null && timeData != TimeData.NONE) || (timeManipulatorUUID != null && world.getPlayerByUUID(Objects.requireNonNull(timeManipulatorUUID, "wtf? sync timeManipulatorUUID")) == null)) {
-                timeManipulatorUUID = null;
-                tickCounter=0;
+                setTimeManipulatorUUID(null);
+                setTimeData(TimeData.NONE);
             }
             if (timeData != TimeData.ACCELERATION && timeAccelerationPhase != 0) {
-                timeAccelerationPhase = 0;
-                tickCounter=0;
+                setTimeAccelerationPhase(0);
+                tickCounter = 0;
             }
         }
     }
 
+    @Nullable
     public UUID getTimeManipulatorUUID() {
-        if (timeManipulatorUUID == null) return UUID.randomUUID();
         return timeManipulatorUUID;
     }
 
     public void setTimeManipulatorUUID(UUID timeManipulatorUUID) {
         this.timeManipulatorUUID = timeManipulatorUUID;
+        if (!world.isClientSide()) {
+            AddonPackets.sendToAllPlayers(SyncWorldCapPacket.timeManipulator(timeManipulatorUUID));
+        }
     }
 
     public TimeData getTimeData() {
@@ -51,6 +58,9 @@ public class WorldCap {
 
     public void setTimeData(TimeData timeData) {
         this.timeData = timeData;
+        if (!world.isClientSide()) {
+            AddonPackets.sendToAllPlayers(SyncWorldCapPacket.timeData(timeData));
+        }
     }
 
     public int getTimeAccelerationPhase() {
@@ -59,6 +69,9 @@ public class WorldCap {
 
     public void setTimeAccelerationPhase(int timeAccelerationPhase) {
         this.timeAccelerationPhase = timeAccelerationPhase;
+        if (!world.isClientSide()) {
+            AddonPackets.sendToAllPlayers(SyncWorldCapPacket.timeAccelPhase(timeAccelerationPhase));
+        }
     }
 
     public int getTickCounter() {
@@ -88,6 +101,10 @@ public class WorldCap {
             timeManipulatorUUID = nbt.getUUID("TimeManipulatorUUID");
         }
         timeData = MCUtil.nbtGetEnum(nbt, "TimeData", TimeData.class);
+    }
+
+    public void onPlayerLogIn(ServerPlayerEntity player) {
+        AddonPackets.sendToClient(new ServerIdPacket(serverId), player);
     }
 
     public enum TimeData {

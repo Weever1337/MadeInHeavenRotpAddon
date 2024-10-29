@@ -10,10 +10,7 @@ import com.github.standobyte.jojo.power.impl.stand.type.EntityStandType;
 import com.github.standobyte.jojo.power.impl.stand.type.StandType;
 import com.github.standobyte.jojo.util.mod.StoryPart;
 import com.weever.rotp_mih.MadeInHeavenAddon;
-import com.weever.rotp_mih.action.stand.Chop;
-import com.weever.rotp_mih.action.stand.LightSpeedDash;
-import com.weever.rotp_mih.action.stand.ThroatSlice;
-import com.weever.rotp_mih.action.stand.UniverseReset;
+import com.weever.rotp_mih.action.stand.*;
 import com.weever.rotp_mih.entity.MadeInHeavenEntity;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -76,6 +73,12 @@ public class InitStands {
     public static final RegistryObject<StandEntityAction> MIH_BLOCK = ACTIONS.register("mih_block",
             () -> new StandEntityBlock());
 
+    public static final RegistryObject<StandEntityAction> MIH_TIME_SYSTEM = ACTIONS.register("mih_time_system",
+            () -> new TimeSystem(new StandEntityAction.Builder()
+                    .autoSummonStand()
+                    .partsRequired(StandPart.MAIN_BODY))
+    );
+
     public static final EntityStandRegistryObject<EntityStandType<StandStats>, StandEntityType<MadeInHeavenEntity>> MADE_IN_HEAVEN =
             new EntityStandRegistryObject<>("madeinheaven",
                     STANDS,
@@ -89,7 +92,8 @@ public class InitStands {
                             )
                             .rightClickHotbar(
                                     MIH_BLOCK.get(),
-                                    MIH_DASH.get()
+                                    MIH_DASH.get(),
+                                    MIH_TIME_SYSTEM.get()
                             )
                             .defaultStats(StandStats.class, new StandStats.Builder()
                                     .power(13.0)

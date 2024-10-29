@@ -7,6 +7,8 @@ import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
+import com.weever.rotp_mih.capability.world.WorldCap;
+import com.weever.rotp_mih.capability.world.WorldCapProvider;
 import com.weever.rotp_mih.init.InitParticles;
 import com.weever.rotp_mih.init.InitStands;
 import com.weever.rotp_mih.utils.ParticleUtils;
@@ -33,6 +35,11 @@ public class ThroatSlice extends StandEntityAction {
 
     @Override
     protected ActionConditionResult checkStandConditions(StandEntity stand, IStandPower power, ActionTarget target) {
+        super.checkStandConditions(stand, power, target);
+        LivingEntity user = power.getUser();
+        if (user.level.dimension() != World.OVERWORLD) return ActionConditionResult.NEGATIVE;
+        if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && UUIDUtil.equals(user.getUUID(), WorldCapProvider.getClientTimeManipulatorUUID()))
+            return ActionConditionResult.POSITIVE;
         if (power.getStamina() < 50) return ActionConditionResult.NEGATIVE;
         return ActionConditionResult.POSITIVE;
     }
@@ -41,10 +48,6 @@ public class ThroatSlice extends StandEntityAction {
     public void standPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
         LivingEntity user = userPower.getUser();
         if (!world.isClientSide()) {
-//            if (!MadeInHeavenStandType.isValue(TimeUtil.Values.ACCELERATION)) {
-//                ((PlayerEntity) user).displayClientMessage(new TranslationTextComponent("rotp_mih.message.action_condition.cant_use_without_timeaccel"), true);
-//                return;
-//            }
             Vector3d startVec = user.position().add(0, user.getEyeHeight(), 0);
             Vector3d lookAt = customLookAt(world, user);
 

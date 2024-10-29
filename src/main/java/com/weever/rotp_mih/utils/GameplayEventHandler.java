@@ -7,10 +7,12 @@ import com.github.standobyte.jojo.network.PacketManager;
 import com.github.standobyte.jojo.network.packets.fromclient.ClClickActionPacket;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.weever.rotp_mih.MadeInHeavenAddon;
-import com.weever.rotp_mih.capability.WorldCap;
-import com.weever.rotp_mih.capability.WorldCapProvider;
+import com.weever.rotp_mih.capability.world.WorldCap;
+import com.weever.rotp_mih.capability.world.WorldCapProvider;
 import com.weever.rotp_mih.entity.MadeInHeavenEntity;
 import com.weever.rotp_mih.init.InitStands;
+import com.weever.rotp_mih.network.AddonPackets;
+import com.weever.rotp_mih.network.fromserver.ChangeMaxUpStepPacket;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
@@ -25,11 +27,10 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.Objects;
 import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = MadeInHeavenAddon.MOD_ID)
-public class GameplayUtil {
+public class GameplayEventHandler {
     public static final UUID SPEED = UUID.fromString("0e9584f4-6936-41fc-8ddb-ab20a4ba626a");
     public static final UUID SWIM = UUID.fromString("c4c806cc-b788-4503-aa45-6f35cb03f1ba");
 
@@ -39,7 +40,7 @@ public class GameplayUtil {
             PlayerEntity player = (PlayerEntity) event.getEntityLiving();
             if (!player.level.isClientSide() && player instanceof ServerPlayerEntity) {
                 if (WorldCapProvider.getWorldCap((ServerPlayerEntity) player).getTimeData() != WorldCap.TimeData.NONE) {
-                    if (WorldCapProvider.getWorldCap((ServerPlayerEntity) player).getTimeManipulatorUUID().equals(player.getUUID())) {
+                    if (WorldCapProvider.getWorldCap((ServerPlayerEntity) player).getTimeManipulatorUUID() == player.getUUID()) {
                         WorldCapProvider.getWorldCap((ServerPlayerEntity) player).setTimeManipulatorUUID(null);
                     }
                 }
@@ -57,8 +58,8 @@ public class GameplayUtil {
                     if (IStandPower.getStandPowerOptional(player).isPresent() && IStandPower.getStandPowerOptional(player).map(p -> p.getType() == InitStands.MADE_IN_HEAVEN.getStandType()).orElse(false)) {
                         int phase = WorldCapProvider.getWorldCap(serverPlayer).getTimeAccelerationPhase();
                         IStandPower power = IStandPower.getStandPowerOptional(player).orElse(null);
+                        accelerateTime(serverPlayer, phase, power);
                         boostOnAcceleration(player, phase);
-                        accelerateTime(serverPlayer,phase, power);
                     }
                 }
             }
@@ -78,7 +79,9 @@ public class GameplayUtil {
             swim.removeModifier(SWIM);
             swim.addTransientModifier(new AttributeModifier(
                     SWIM, "Swim", 0.1 * timeAccelPhase, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            AddonPackets.sendToClient(new ChangeMaxUpStepPacket(user.getId(), 1.6f), user);
         } else {
+            AddonPackets.sendToClient(new ChangeMaxUpStepPacket(user.getId(), .6f), user);
             speed.removeModifier(SPEED);
             swim.removeModifier(SWIM);
         }
@@ -95,7 +98,7 @@ public class GameplayUtil {
                 multiplier = 20L * timeAccelPhase;
             }
             if (WorldCapProvider.getWorldCap(player).getTickCounter() % 100 == 0) {
-                if (timeAccelPhase <= 30) {
+                if (timeAccelPhase <= 15) {
                     timeAccelPhase++;
                 } else {
                     MadeInHeavenAddon.LOGGER.debug("[SERVER] Universe Reset Action");
@@ -110,17 +113,14 @@ public class GameplayUtil {
             ((ServerWorld) player.level).setDayTime(player.level.getDayTime() + multiplier);
         } else {
             WorldCapProvider.getWorldCap(player).setTimeManipulatorUUID(null);
-            WorldCapProvider.getWorldCap(player).setTimeData(WorldCap.TimeData.NONE);
-            WorldCapProvider.getWorldCap(player).setTimeAccelerationPhase(0);
-            WorldCapProvider.getWorldCap(player).setTickCounter(0);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onWorldTick(TickEvent.WorldTickEvent event) {
-        if (event.world.dimension() == World.OVERWORLD) {
+        if (!event.world.isClientSide() && event.world.dimension() == World.OVERWORLD) {
             if (event.phase == TickEvent.Phase.START) {
-                WorldCapProvider.getWorldCap(Objects.requireNonNull(event.world.getServer())).tick();
+                WorldCapProvider.getWorldCap((ServerWorld) event.world).tick();
             }
         }
     }

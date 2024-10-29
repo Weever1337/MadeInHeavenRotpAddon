@@ -1,6 +1,7 @@
 package com.weever.rotp_mih;
 
 import com.weever.rotp_mih.init.*;
+import com.weever.rotp_mih.network.AddonPackets;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -25,6 +26,7 @@ public class MadeInHeavenAddon {
     }
 
     private void onFMLCommonSetup(FMLCommonSetupEvent event) {
+        AddonPackets.init();
         InitCapabilities.registerCapabilities();
     }
 }

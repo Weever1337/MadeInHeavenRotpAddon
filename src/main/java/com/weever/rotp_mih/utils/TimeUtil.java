@@ -4,11 +4,7 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 
 public class TimeUtil {
     public static void multiplyProjectileSpeed(ProjectileEntity projectile, int n) {
-        double motionX = projectile.getDeltaMovement().x;
-        double motionY = projectile.getDeltaMovement().y;
-        double motionZ = projectile.getDeltaMovement().z;
-
-        projectile.setDeltaMovement(motionX * n, motionY * n, motionZ * n);
+        projectile.setDeltaMovement(projectile.getDeltaMovement().scale(n));
     }
 
     public static int getCalculatedPhase(int phase) {
