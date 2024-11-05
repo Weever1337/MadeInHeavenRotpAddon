@@ -30,16 +30,6 @@ public class AddonPackets {
                 .networkProtocolVersion(() -> PROTOCOL_VERSION)
                 .simpleChannel();
 
-//        registerMessage(channel, new CommonConfigPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-//        registerMessage(channel, new ResetSyncedCommonConfigPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-//        registerMessage(channel, new TrSetDataIsEmptyPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-//        registerMessage(channel, new TrResetDeathTimePacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-//        registerMessage(channel, new RWSetMandomShader.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-//        registerMessage(channel, new RWRemoveMandomShader.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-//        registerMessage(channel, new RWSetSelectedSlot.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-//        registerMessage(channel, new RWSetCarriedItem.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-//        registerMessage(channel, new RWAddClientPlayerData.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-//        registerMessage(channel, new RWSyncClientPlayerDataFromClient.Handler(), Optional.of(NetworkDirection.PLAY_TO_SERVER));
         registerMessage(channel, new ServerIdPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         registerMessage(channel, new ChangeMaxUpStepPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         registerMessage(channel, new SyncWorldCapPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));

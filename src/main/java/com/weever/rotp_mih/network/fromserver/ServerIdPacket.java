@@ -1,30 +1,28 @@
 package com.weever.rotp_mih.network.fromserver;
 
-import java.util.UUID;
-import java.util.function.Supplier;
-
 import com.github.standobyte.jojo.network.packets.IModPacketHandler;
-
 import com.weever.rotp_mih.client.ClientEventHandler;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-public class ServerIdPacket {
-    public final UUID serverId;
+import java.util.function.Supplier;
 
-    public ServerIdPacket(UUID serverId) {
+public class ServerIdPacket {
+    public final int serverId;
+
+    public ServerIdPacket(int serverId) {
         this.serverId = serverId;
     }
 
     public static class Handler implements IModPacketHandler<ServerIdPacket> {
         @Override
         public void encode(ServerIdPacket msg, PacketBuffer buf) {
-            buf.writeUUID(msg.serverId);
+            buf.writeInt(msg.serverId);
         }
 
         @Override
         public ServerIdPacket decode(PacketBuffer buf) {
-            UUID serverId = buf.readUUID();
+            int serverId = buf.readInt();
             return new ServerIdPacket(serverId);
         }
 

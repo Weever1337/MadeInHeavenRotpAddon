@@ -7,8 +7,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
-
 public class ClientEventHandler {
     private static ClientEventHandler instance = null;
     private final Minecraft mc;
@@ -28,7 +26,7 @@ public class ClientEventHandler {
         return instance;
     }
 
-    private UUID serverId;
+    private int serverId;
     private boolean isLoggedIn = false;
 
     public void setServerId(ServerIdPacket packet) {
@@ -36,7 +34,7 @@ public class ClientEventHandler {
     }
 
     @Nullable
-    public UUID getServerId() {
+    public int getServerId() {
         return isLoggedIn ? serverId : null;
     }
 

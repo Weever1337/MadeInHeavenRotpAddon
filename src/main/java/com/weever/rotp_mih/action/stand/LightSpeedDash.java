@@ -6,8 +6,7 @@ import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
-import com.weever.rotp_mih.capability.world.WorldCap;
-import com.weever.rotp_mih.capability.world.WorldCapProvider;
+import com.weever.rotp_mih.utils.TimeUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
@@ -19,12 +18,9 @@ public class LightSpeedDash extends StandEntityAction {
     }
 
     @Override
-    protected ActionConditionResult checkStandConditions(StandEntity stand, IStandPower power, ActionTarget target) {
-        super.checkStandConditions(stand, power, target);
-        LivingEntity user = power.getUser();
-        if (user.level.dimension() != World.OVERWORLD) return ActionConditionResult.NEGATIVE;
-        if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && UUIDUtil.equals(user.getUUID(), WorldCapProvider.getClientTimeManipulatorUUID()))
-            return ActionConditionResult.POSITIVE;
+    public ActionConditionResult checkConditions(LivingEntity user, IStandPower power, ActionTarget target) {
+        System.out.println(!TimeUtil.checkConditions(user, power, true));
+        if (!TimeUtil.checkConditions(user, power, true)) return ActionConditionResult.NEGATIVE;
         if (power.getStamina() < 50) return ActionConditionResult.NEGATIVE;
         return ActionConditionResult.POSITIVE;
     }

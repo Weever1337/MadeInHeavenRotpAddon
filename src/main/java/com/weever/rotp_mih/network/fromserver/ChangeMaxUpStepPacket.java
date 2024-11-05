@@ -2,13 +2,11 @@ package com.weever.rotp_mih.network.fromserver;
 
 import com.github.standobyte.jojo.client.ClientUtil;
 import com.github.standobyte.jojo.network.packets.IModPacketHandler;
-import com.weever.rotp_mih.client.ClientEventHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-import java.util.UUID;
 import java.util.function.Supplier;
 
 public class ChangeMaxUpStepPacket {

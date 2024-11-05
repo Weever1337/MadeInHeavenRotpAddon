@@ -9,6 +9,7 @@ import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.github.standobyte.jojo.util.general.LazySupplier;
 import com.weever.rotp_mih.capability.world.WorldCap;
 import com.weever.rotp_mih.capability.world.WorldCapProvider;
+import com.weever.rotp_mih.utils.TimeUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.IFormattableTextComponent;
@@ -23,13 +24,10 @@ public class TimeSystem extends StandEntityAction {
     }
 
     @Override
-    protected ActionConditionResult checkStandConditions(StandEntity stand, IStandPower power, ActionTarget target) {
-        super.checkStandConditions(stand, power, target);
+    public ActionConditionResult checkConditions(LivingEntity user, IStandPower power, ActionTarget target) {
+//        super.checkConditions()
+        if (!TimeUtil.checkConditions(user, power, true)) return ActionConditionResult.NEGATIVE;
         if (power.getStamina() < 300) return ActionConditionResult.NEGATIVE;
-        LivingEntity user = power.getUser();
-        if (user.level.dimension() != World.OVERWORLD) return ActionConditionResult.NEGATIVE;
-        if (WorldCapProvider.getClientTimeData() != WorldCap.TimeData.NONE && UUIDUtil.equals(user.getUUID(), WorldCapProvider.getClientTimeManipulatorUUID()))
-            return ActionConditionResult.POSITIVE;
         return ActionConditionResult.POSITIVE;
     }
 
@@ -37,7 +35,7 @@ public class TimeSystem extends StandEntityAction {
     public void standPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
         if (!world.isClientSide()) {
             LivingEntity user = userPower.getUser();
-            if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && UUIDUtil.equals(user.getUUID(), WorldCapProvider.getClientTimeManipulatorUUID())) {
+            if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && user.getUUID() == WorldCapProvider.getClientTimeManipulatorUUID()) {
                 WorldCapProvider.getWorldCap((ServerWorld) user.level).setTimeManipulatorUUID(null);
             } else if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.NONE) {
                 WorldCapProvider.getWorldCap((ServerWorld) user.level).setTimeManipulatorUUID(user.getUUID());
@@ -49,7 +47,7 @@ public class TimeSystem extends StandEntityAction {
     @Override
     public IFormattableTextComponent getTranslatedName(IStandPower power, String key) {
         LivingEntity user = power.getUser();
-        if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && UUIDUtil.equals(user.getUUID(), WorldCapProvider.getClientTimeManipulatorUUID())) {
+        if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && user.getUUID() == WorldCapProvider.getClientTimeManipulatorUUID()) {
             return new TranslationTextComponent(key + ".cast", new TranslationTextComponent("rotp_mih.time_system.clear"));
         } else {
             return new TranslationTextComponent(key + ".cast", new TranslationTextComponent("rotp_mih.time_system.acceleration"));
@@ -64,7 +62,7 @@ public class TimeSystem extends StandEntityAction {
     @Override
     public ResourceLocation getIconTexture(@Nullable IStandPower power) {
         if (power != null) {
-            if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && UUIDUtil.equals(power.getUser().getUUID(), WorldCapProvider.getClientTimeManipulatorUUID())) {
+            if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && power.getUser().getUUID() == WorldCapProvider.getClientTimeManipulatorUUID()) {
                 return clearTex.get();
             } else {
                 return accelerationTex.get();

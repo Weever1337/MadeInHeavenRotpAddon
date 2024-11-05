@@ -7,11 +7,10 @@ import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
-import com.weever.rotp_mih.capability.world.WorldCap;
-import com.weever.rotp_mih.capability.world.WorldCapProvider;
 import com.weever.rotp_mih.init.InitParticles;
 import com.weever.rotp_mih.init.InitStands;
 import com.weever.rotp_mih.utils.ParticleUtils;
+import com.weever.rotp_mih.utils.TimeUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
@@ -34,12 +33,8 @@ public class ThroatSlice extends StandEntityAction {
     }
 
     @Override
-    protected ActionConditionResult checkStandConditions(StandEntity stand, IStandPower power, ActionTarget target) {
-        super.checkStandConditions(stand, power, target);
-        LivingEntity user = power.getUser();
-        if (user.level.dimension() != World.OVERWORLD) return ActionConditionResult.NEGATIVE;
-        if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && UUIDUtil.equals(user.getUUID(), WorldCapProvider.getClientTimeManipulatorUUID()))
-            return ActionConditionResult.POSITIVE;
+    public ActionConditionResult checkConditions(LivingEntity user, IStandPower power, ActionTarget target) {
+        if (!TimeUtil.checkConditions(user, power, true)) return ActionConditionResult.NEGATIVE_QUEUEABLE;
         if (power.getStamina() < 50) return ActionConditionResult.NEGATIVE;
         return ActionConditionResult.POSITIVE;
     }

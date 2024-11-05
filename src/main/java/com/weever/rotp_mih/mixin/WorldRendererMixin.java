@@ -21,8 +21,8 @@ public class WorldRendererMixin {
     @ModifyVariable(method = "renderClouds", at = @At("HEAD"), argsOnly = true, ordinal = 0)
     private float jojoTsCloudsChangePartialTick(float partialTick) {
         if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION) {
-            System.out.println("p: " + partialTick * TimeUtil.getCalculatedPhase(WorldCapProvider.getClientTimeAccelPhase()));
-            return partialTick * TimeUtil.getCalculatedPhase(WorldCapProvider.getClientTimeAccelPhase()) * 100;
+//            System.out.println("p: " + partialTick * TimeUtil.getCalculatedPhase(WorldCapProvider.getClientTimeAccelPhase()));
+            return partialTick * TimeUtil.getCalculatedPhase(WorldCapProvider.getClientTimeAccelPhase());
         }
         return partialTick;
     }

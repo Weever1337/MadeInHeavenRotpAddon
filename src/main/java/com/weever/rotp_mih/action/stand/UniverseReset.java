@@ -52,7 +52,7 @@ public class UniverseReset extends StandEntityAction {
             }
         }
         if (world.isClientSide()) {
-            ParticleUtils.createBlackHole(InitParticles.SPARK.get(), new Vector3d(x, y, z), world, 5, 10, 20, 3, 0.05f);
+            ParticleUtils.createSpiral(InitParticles.SPARK.get(), world, new Vector3d(x, y, z), 5, 10);
         }
     }
 

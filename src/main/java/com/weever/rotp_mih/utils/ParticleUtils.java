@@ -104,26 +104,42 @@ public class ParticleUtils {
         createLine(particle, level, start, end, amount, Vector3d.ZERO);
     }
 
-    public static void createBlackHole(IParticleData particle, Vector3d center, World world, double radius, int loops, int particlesPerLoop, double height, double speed) {
+//    public static void createNinjaHat(IParticleData particle, Vector3d center, World world, double radius, int loops, int particlesPerLoop, double height, double speed) {
+//        if (!world.isClientSide())
+//            return;
+//
+//        for (int loop = 0; loop < loops; loop++) {
+//            double loopProgress = (double) loop / (double) loops;
+//
+//            for (int i = 0; i < particlesPerLoop; i++) { // btw, nevernight - good luck. I think, you understand, what I mean with comments below (because I forgot to remove after a "lesson" with math) =)
+//                double angle = 2 * Math.PI * i / particlesPerLoop;
+//                double spiralRadius = radius * (1 - loopProgress);
+//                double x = center.x + spiralRadius * MathHelper.cos((float) angle);
+//                double z = center.z + spiralRadius * MathHelper.sin((float) angle);
+//                double y = center.y + height * loopProgress;
+//
+//                double motionX = -spiralRadius * MathHelper.cos((float) angle) * speed;
+//                double motionY = -height * loopProgress * speed;
+//                double motionZ = -spiralRadius * MathHelper.sin((float) angle) * speed;
+//
+//                world.addParticle(particle, x, y, z, motionX, motionY, motionZ);
+//            }
+//        }
+//    }
+
+    public static void createSpiral(IParticleData particleData, World world, Vector3d center, double radius, int amount) {
         if (!world.isClientSide())
             return;
 
-        for (int loop = 0; loop < loops; loop++) {
-            double loopProgress = (double) loop / (double) loops;
+        // spiral:
 
-            for (int i = 0; i < particlesPerLoop; i++) { // btw, nevernight - good luck. I think, you understand, what I mean with comments below (because I forgot to remove after a "lesson" with math) =)
-                double angle = 2 * Math.PI * i / particlesPerLoop;
-                double spiralRadius = radius * (1 - loopProgress);
-                double x = center.x + spiralRadius * MathHelper.cos((float) angle);
-                double z = center.z + spiralRadius * MathHelper.sin((float) angle);
-                double y = center.y + height * loopProgress;
+        for (int i = 0; i < amount; i++) {
+            double angle = i * Math.PI * 2 / amount;
+            double x = center.x + radius * MathHelper.cos((float) angle);
+            double z = center.z + radius * MathHelper.sin((float) angle);
+            double y = center.y;
 
-                double motionX = -spiralRadius * MathHelper.cos((float) angle) * speed;
-                double motionY = -height * loopProgress * speed;
-                double motionZ = -spiralRadius * MathHelper.sin((float) angle) * speed;
-
-                world.addParticle(particle, x, y, z, motionX, motionY, motionZ);
-            }
+            world.addParticle(particleData, x, y, z, 0, 0, 0);
         }
     }
 }
