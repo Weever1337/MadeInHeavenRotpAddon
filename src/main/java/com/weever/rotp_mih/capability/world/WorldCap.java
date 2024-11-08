@@ -10,12 +10,11 @@ import net.minecraft.world.server.ServerWorld;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
-import java.util.Random;
 import java.util.UUID;
 
 public class WorldCap {
     private final ServerWorld world;
-    private int serverId;
+    private UUID serverId;
     private UUID timeManipulatorUUID;
     private TimeData timeData = TimeData.NONE;
     private int timeAccelerationPhase = 0;
@@ -24,7 +23,7 @@ public class WorldCap {
     public WorldCap(ServerWorld world) {
         this.world = world;
         if (!world.isClientSide()) {
-            this.serverId = new Random().nextInt();
+            this.serverId = UUID.randomUUID();
         }
     }
 
@@ -85,7 +84,7 @@ public class WorldCap {
 
     CompoundNBT save() {
         CompoundNBT nbt = new CompoundNBT();
-        nbt.putInt("ServerId", serverId);
+        nbt.putUUID("ServerId", serverId);
         if (timeManipulatorUUID != null) {
             nbt.putUUID("TimeManipulatorUUID", timeManipulatorUUID);
         }
@@ -95,8 +94,8 @@ public class WorldCap {
     }
 
     void load(CompoundNBT nbt) {
-        if (nbt.contains("ServerId")) {
-            serverId = nbt.getInt("ServerId");
+        if (nbt.hasUUID("ServerId")) {
+            serverId = nbt.getUUID("ServerId");
         }
         if (nbt.hasUUID("TimeManipulatorUUID")) {
             timeManipulatorUUID = nbt.getUUID("TimeManipulatorUUID");

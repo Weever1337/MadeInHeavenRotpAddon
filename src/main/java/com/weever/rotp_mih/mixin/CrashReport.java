@@ -5,10 +5,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import net.minecraft.crash.CrashReport;
-
-@Mixin(CrashReport.class)
-public abstract class CrashReportLOL {
+@Mixin(net.minecraft.crash.CrashReport.class)
+public abstract class CrashReport {
 
     @Shadow
     public abstract String getExceptionMessage();

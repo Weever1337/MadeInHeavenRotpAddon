@@ -5,14 +5,15 @@
   "refmap": "rotp_mih.mixins.refmap.json",
   "minVersion": "0.8",
   "mixins": [
-    "CrashReportLOL",
-    "TimeStopMixin",
-    "ProjectileEntityMixin"
+    "CrashReport",
+    "GrowthMixin",
+    "ProjectileEntityMixin",
+    "TimeStopMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
-    "WorldRendererMixin"
+    "client.WorldRendererMixin"
   ]
 }

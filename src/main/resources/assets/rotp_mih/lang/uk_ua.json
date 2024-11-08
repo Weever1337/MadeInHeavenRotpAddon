@@ -7,13 +7,17 @@
   "action.rotp_mih.mih_chop": "Проколоти",
   "action.rotp_mih.mih_barrage": "Шквал ударів",
 
-  "action.rotp_mih.mih_dash": "Світлова швидкість",
-  "action.rotp_mih.mih_universe_reset": "Скидання Всесвіту",
+  "action.rotp_mih.mih_dash": "Світова швидкість",
+  "action.rotp_mih.mih_universe_reset": "Скинути Вселенню",
   "action.rotp_mih.mih_block": "Блокувати",
+  "action.rotp_mih.mih_throat_slice": "Горлова нарізка",
+  "action.rotp_mih.mih_time_system.cast": "Система часу: %s",
+
+  "rotp_mih.time_system.acceleration": "Прискорити",
+  "rotp_mih.time_system.clear": "Очистити",
 
   "rotp_mih.subtitle.madeinheaven_summon": "\"Made in Heaven!\"",
 
-  "rotp_mih.message.action_condition.cant_use_without_timeaccel": "Ви не можете використовувати цю дію без прискорення часу",
-  "rotp_mih.message.action_condition.already_time_manipulation": "Хтось вже маніпулює часом",
-  "rotp_mih.message.action_condition.already_cleared": "Уже немає маніпуляцій із часом"
+  "rotp_mih.message.action_condition.cant_use_without_acceleration": "Ви не можете використовувати цю дію без прискорення часу",
+  "rotp_mih.message.action_condition.already_time_manipulation": "Хтось вже маніпулює часом"
   }

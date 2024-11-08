@@ -8,22 +8,21 @@ import com.github.standobyte.jojo.capability.world.TimeStopHandler;
 import com.github.standobyte.jojo.capability.world.TimeStopInstance;
 import com.github.standobyte.jojo.network.PacketManager;
 import com.github.standobyte.jojo.network.packets.fromclient.ClClickActionPacket;
-import com.github.standobyte.jojo.power.IPower;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.weever.rotp_mih.MadeInHeavenAddon;
 import com.weever.rotp_mih.capability.world.WorldCap;
-import com.weever.rotp_mih.capability.world.WorldCapProvider;
 import com.weever.rotp_mih.capability.world.WorldCap.TimeData;
+import com.weever.rotp_mih.capability.world.WorldCapProvider;
 import com.weever.rotp_mih.entity.MadeInHeavenEntity;
 import com.weever.rotp_mih.init.InitStands;
 import com.weever.rotp_mih.network.AddonPackets;
 import com.weever.rotp_mih.network.fromserver.ChangeMaxUpStepPacket;
-
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeMod;
@@ -51,8 +50,8 @@ public class GameplayEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onAccelerate(LivingUpdateEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
-        if (!livingEntity.level.isClientSide() && livingEntity != null) {
-            if (WorldCapProvider.getClientTimeManipulatorUUID() == livingEntity.getUUID()) {
+        if (!livingEntity.level.isClientSide()) {
+            if (TimeUtil.equalUUID(livingEntity.getUUID())) {
                 if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION) {
                     if (IStandPower.getStandPowerOptional(livingEntity).isPresent() && IStandPower.getStandPowerOptional(livingEntity).map(p -> p.getType() == InitStands.MADE_IN_HEAVEN.getStandType()).orElse(false)) {
                         int phase = WorldCapProvider.getClientTimeAccelPhase();
@@ -82,12 +81,18 @@ public class GameplayEventHandler {
                 AddonPackets.sendToClient(new ChangeMaxUpStepPacket(livingEntity.getId(), 1.6f), (ServerPlayerEntity) livingEntity);
             }
         } else {
-            if (livingEntity instanceof ServerPlayerEntity) {
-                AddonPackets.sendToClient(new ChangeMaxUpStepPacket(livingEntity.getId(), .6f), (ServerPlayerEntity) livingEntity);
-            }
-            speed.removeModifier(SPEED);
-            swim.removeModifier(SWIM);
+            removeBoost(livingEntity);
         }
+    }
+
+    private static void removeBoost(LivingEntity livingEntity) {
+        ModifiableAttributeInstance speed = livingEntity.getAttribute(Attributes.MOVEMENT_SPEED);
+        ModifiableAttributeInstance swim = livingEntity.getAttribute(ForgeMod.SWIM_SPEED.get());
+        if (livingEntity instanceof ServerPlayerEntity) {
+            AddonPackets.sendToClient(new ChangeMaxUpStepPacket(livingEntity.getId(), .6f), (ServerPlayerEntity) livingEntity);
+        }
+        speed.removeModifier(SPEED);
+        swim.removeModifier(SWIM);
     }
 
     private static void accelerateTime(LivingEntity livingEntity, int timeAccelPhase, IStandPower power) {
@@ -100,17 +105,21 @@ public class GameplayEventHandler {
             if (WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).getTickCounter() % 2 == 0) {
                 multiplier = 20L * timeAccelPhase;
             }
-            if (WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).getTickCounter() % 15 == 0) { // TODO: 100
+            if (WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).getTickCounter() % 100 == 0) { // TODO: 100
                 if (timeAccelPhase <= 15) {
                     timeAccelPhase++;
                 } else {
-                    MadeInHeavenAddon.LOGGER.debug("Universe Reset Action");
                     useAction(InitStands.MIH_UNIVERSE_RESET.get(), power);
+                    removeBoost(livingEntity);
+                    WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).setTimeManipulatorUUID(null);
                 }
             }
             WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).setTickCounter(WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).getTickCounter()+1);
             WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).setTimeAccelerationPhase(timeAccelPhase);
             ((ServerWorld) livingEntity.level).setDayTime(livingEntity.level.getDayTime() + multiplier);
+            if (!livingEntity.getDeltaMovement().equals(Vector3d.ZERO)) {
+                power.consumeStamina(livingEntity.getSpeed() * 15);
+            }
         } else {
             WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).setTimeManipulatorUUID(null);
         }
@@ -165,6 +174,13 @@ public class GameplayEventHandler {
     private static void useAction(Action<IStandPower> action, IStandPower power, boolean sneak) {
         if (power == null || power.getType() == null || action == null) return;
         LivingEntity user = power.getUser();
+        AtomicBoolean haveAction = new AtomicBoolean(false);
+        power.getAllUnlockedActions().forEach(a -> {
+            if (a == action && a.getCooldownTechnical(power) > 0) {
+                haveAction.set(true);
+            }
+        });
+        if (!haveAction.get()) return;
 
         if (user.level.isClientSide()) {
             ClClickActionPacket packet = new ClClickActionPacket(
@@ -178,5 +194,9 @@ public class GameplayEventHandler {
 
     private static void useAction(Action<IStandPower> action, IStandPower power) {
         useAction(action, power, false);
+    }
+
+    private static void useAction(Action<IStandPower> action, LivingEntity livingEntity, boolean sneak) {
+        useAction(action, IStandPower.getStandPowerOptional(livingEntity).orElse(null), sneak);
     }
 }

@@ -25,8 +25,8 @@ public class TimeSystem extends StandEntityAction {
 
     @Override
     public ActionConditionResult checkConditions(LivingEntity user, IStandPower power, ActionTarget target) {
-//        super.checkConditions()
-        if (!TimeUtil.checkConditions(user, power, true)) return ActionConditionResult.NEGATIVE;
+        if (!TimeUtil.checkConditions(user, power, false))
+            return ActionConditionResult.createNegative(new TranslationTextComponent("rotp_mih.message.action_condition.already_time_manipulation"));
         if (power.getStamina() < 300) return ActionConditionResult.NEGATIVE;
         return ActionConditionResult.POSITIVE;
     }
@@ -35,7 +35,7 @@ public class TimeSystem extends StandEntityAction {
     public void standPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
         if (!world.isClientSide()) {
             LivingEntity user = userPower.getUser();
-            if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && user.getUUID() == WorldCapProvider.getClientTimeManipulatorUUID()) {
+            if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && TimeUtil.equalUUID(user.getUUID())) {
                 WorldCapProvider.getWorldCap((ServerWorld) user.level).setTimeManipulatorUUID(null);
             } else if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.NONE) {
                 WorldCapProvider.getWorldCap((ServerWorld) user.level).setTimeManipulatorUUID(user.getUUID());
@@ -47,11 +47,16 @@ public class TimeSystem extends StandEntityAction {
     @Override
     public IFormattableTextComponent getTranslatedName(IStandPower power, String key) {
         LivingEntity user = power.getUser();
-        if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && user.getUUID() == WorldCapProvider.getClientTimeManipulatorUUID()) {
+        if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && TimeUtil.equalUUID(user.getUUID())) {
             return new TranslationTextComponent(key + ".cast", new TranslationTextComponent("rotp_mih.time_system.clear"));
         } else {
             return new TranslationTextComponent(key + ".cast", new TranslationTextComponent("rotp_mih.time_system.acceleration"));
         }
+    }
+
+    @Override
+    public boolean greenSelection(IStandPower power, ActionConditionResult conditionCheck) {
+        return WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && TimeUtil.equalUUID(power.getUser().getUUID());
     }
 
     private final LazySupplier<ResourceLocation> accelerationTex =
@@ -62,7 +67,7 @@ public class TimeSystem extends StandEntityAction {
     @Override
     public ResourceLocation getIconTexture(@Nullable IStandPower power) {
         if (power != null) {
-            if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && power.getUser().getUUID() == WorldCapProvider.getClientTimeManipulatorUUID()) {
+            if (TimeUtil.equalUUID(power.getUser().getUUID())) {
                 return clearTex.get();
             } else {
                 return accelerationTex.get();

@@ -20,6 +20,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -34,7 +35,8 @@ public class ThroatSlice extends StandEntityAction {
 
     @Override
     public ActionConditionResult checkConditions(LivingEntity user, IStandPower power, ActionTarget target) {
-        if (!TimeUtil.checkConditions(user, power, true)) return ActionConditionResult.NEGATIVE_QUEUEABLE;
+        if (!TimeUtil.checkConditions(user, power, true))
+            return ActionConditionResult.createNegative(new TranslationTextComponent("rotp_mih.message.action_condition.cant_use_without_acceleration"));
         if (power.getStamina() < 50) return ActionConditionResult.NEGATIVE;
         return ActionConditionResult.POSITIVE;
     }

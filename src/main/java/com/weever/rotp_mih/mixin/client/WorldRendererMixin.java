@@ -1,4 +1,4 @@
-package com.weever.rotp_mih.mixin;
+package com.weever.rotp_mih.mixin.client;
 
 import com.weever.rotp_mih.capability.world.WorldCap;
 import com.weever.rotp_mih.capability.world.WorldCapProvider;

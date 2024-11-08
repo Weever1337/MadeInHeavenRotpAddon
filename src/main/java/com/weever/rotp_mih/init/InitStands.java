@@ -64,9 +64,8 @@ public class InitStands {
     );
 
     public static final RegistryObject<StandEntityAction> MIH_UNIVERSE_RESET = ACTIONS.register("mih_universe_reset",
-            () -> new UniverseReset(new StandEntityAction.Builder().standPerformDuration(500).standUserWalkSpeed(1F)
+            () -> new UniverseReset(new StandEntityAction.Builder()
                     .staminaCost(300).cooldown(5550, 5550).resolveLevelToUnlock(4)
-                    .standSound(InitSounds.MIH_UNIVERSE_RESET).shout(InitSounds.MIH_UNIVERSE_RESET_USER)
                     .partsRequired(StandPart.MAIN_BODY))
     );
 
@@ -95,6 +94,14 @@ public class InitStands {
                                     MIH_DASH.get(),
                                     MIH_TIME_SYSTEM.get()
                             )
+                            .defaultKey(
+                                    MIH_THROAT_SLICE.get(),
+                                    "key.keyboard.x"
+                            )
+                            .defaultKey(
+                                    MIH_DASH.get(),
+                                    "key.keyboard.c"
+                            )
                             .defaultStats(StandStats.class, new StandStats.Builder()
                                     .power(13.0)
                                     .speed(20.0)
@@ -108,7 +115,7 @@ public class InitStands {
                             .build(),
 
                     InitEntities.ENTITIES,
-                    () -> new StandEntityType<>(MadeInHeavenEntity::new, 0.65F, 1.75F)
+                    () -> new StandEntityType<>(MadeInHeavenEntity::new, 0.7F, 1.8F)
                             .summonSound(InitSounds.MIH_SUMMON)
                             .unsummonSound(InitSounds.MIH_UNSUMMON)
                     ).withDefaultStandAttributes();

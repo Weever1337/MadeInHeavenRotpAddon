@@ -10,6 +10,7 @@ import com.weever.rotp_mih.utils.TimeUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 public class LightSpeedDash extends StandEntityAction {
@@ -19,8 +20,8 @@ public class LightSpeedDash extends StandEntityAction {
 
     @Override
     public ActionConditionResult checkConditions(LivingEntity user, IStandPower power, ActionTarget target) {
-        System.out.println(!TimeUtil.checkConditions(user, power, true));
-        if (!TimeUtil.checkConditions(user, power, true)) return ActionConditionResult.NEGATIVE;
+        if (!TimeUtil.checkConditions(user, power, true))
+            return ActionConditionResult.createNegative(new TranslationTextComponent("rotp_mih.message.action_condition.cant_use_without_acceleration"));
         if (power.getStamina() < 50) return ActionConditionResult.NEGATIVE;
         return ActionConditionResult.POSITIVE;
     }
