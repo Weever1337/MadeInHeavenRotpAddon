@@ -1,5 +1,6 @@
 package com.weever.rotp_mih;
 
+import com.weever.rotp_mih.addoncompat.OptionalDependencyHelper;
 import com.weever.rotp_mih.init.*;
 import com.weever.rotp_mih.network.AddonPackets;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -28,5 +29,6 @@ public class MadeInHeavenAddon {
     private void onFMLCommonSetup(FMLCommonSetupEvent event) {
         AddonPackets.init();
         InitCapabilities.registerCapabilities();
+        OptionalDependencyHelper.init();
     }
 }

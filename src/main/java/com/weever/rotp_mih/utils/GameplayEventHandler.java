@@ -60,6 +60,8 @@ public class GameplayEventHandler {
                         boostOnAcceleration(livingEntity, phase);
                     }
                 }
+            } else {
+                removeBoost(livingEntity);
             }
         }
     }
@@ -105,7 +107,7 @@ public class GameplayEventHandler {
             if (WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).getTickCounter() % 2 == 0) {
                 multiplier = 20L * timeAccelPhase;
             }
-            if (WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).getTickCounter() % 100 == 0) { // TODO: 100
+            if (WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).getTickCounter() % 100 == 0) { // TODO: 150 maybe?
                 if (timeAccelPhase <= 15) {
                     timeAccelPhase++;
                 } else {
@@ -196,6 +198,7 @@ public class GameplayEventHandler {
         useAction(action, power, false);
     }
 
+    @SuppressWarnings("unused")
     private static void useAction(Action<IStandPower> action, LivingEntity livingEntity, boolean sneak) {
         useAction(action, IStandPower.getStandPowerOptional(livingEntity).orElse(null), sneak);
     }

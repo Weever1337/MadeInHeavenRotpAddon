@@ -85,6 +85,10 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    maven {
+        name = "Expandability"
+        url = "https://maven.florens.be/releases"
+    }
 }
 
 dependencies {
@@ -92,6 +96,7 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.2.34'
 	implementation fg.deobf("standobyte.jojo:JJBA-RipplesOfThePast:${main_mod_version}")
     implementation fg.deobf("curse.maven:hourglass-511172:3488913")
+    compileOnly fg.deobf("be.florens:expandability-forge:${expandability_version}")
 }
 
 jar {
