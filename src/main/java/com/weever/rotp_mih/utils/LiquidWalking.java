@@ -2,7 +2,6 @@ package com.weever.rotp_mih.utils;
 
 import com.github.standobyte.jojo.capability.entity.PlayerUtilCap;
 import com.github.standobyte.jojo.capability.entity.PlayerUtilCapProvider;
-
 import com.github.standobyte.jojo.init.power.non_stand.ModPowers;
 import com.github.standobyte.jojo.init.power.non_stand.hamon.ModHamonSkills;
 import com.github.standobyte.jojo.power.impl.nonstand.INonStandPower;
@@ -14,7 +13,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.vector.Vector3d;
 
 public class LiquidWalking {
     public static boolean onLiquidWalkingEvent(LivingEntity entity, FluidState fluidState) {
@@ -36,13 +34,13 @@ public class LiquidWalking {
             if (TimeUtil.equalUUID(entity.getUUID()) && WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && WorldCapProvider.getClientTimeAccelPhase() >= 2) {
                 if (power.getType() == InitStands.MADE_IN_HEAVEN.getStandType() && power.isActive()) {
                     if (entity.isSprinting()) {
-                        if (power.getStamina() > 0) {
+                        if (power.getStamina() >= 0) {
                             entity.setOnGround(true);
                             if (!entity.level.isClientSide()) {
                                 if (fluidState.getType().is(FluidTags.LAVA) && !entity.fireImmune()) {
-                                    entity.hurt(DamageSource.HOT_FLOOR, 4.0f);
+                                    entity.hurt(DamageSource.HOT_FLOOR, 1.0f);
                                 }
-                                power.consumeStamina(5f);
+                                power.consumeStamina(1f);
                             }
                             return true;
                         }

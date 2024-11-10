@@ -26,7 +26,7 @@ public class InitStands {
     // ======================================== Made In Heaven! ========================================
 
     public static final RegistryObject<StandEntityAction> MIH_PUNCH = ACTIONS.register("mih_punch",
-            () -> new StandEntityLightAttack(new StandEntityLightAttack.Builder()));
+            () -> new StandEntityLightAttack(new StandEntityLightAttack.Builder().cooldown(3)));
 
     public static final RegistryObject<StandEntityAction> MIH_BARRAGE = ACTIONS.register("mih_barrage",
             () -> new StandEntityMeleeBarrage(new StandEntityMeleeBarrage.Builder()
@@ -36,7 +36,8 @@ public class InitStands {
 
     public static final RegistryObject<StandEntityHeavyAttack> MIH_CHOP = ACTIONS.register("mih_chop",
             () -> new Chop(new StandEntityHeavyAttack.Builder().shout(InitSounds.MIH_IMPALE_USER)
-                    .partsRequired(StandPart.ARMS))
+                    .partsRequired(StandPart.ARMS)
+                    .cooldown(25))
     );
 
     public static final RegistryObject<StandEntityHeavyAttack> MIH_HEAVY_PUNCH = ACTIONS.register("mih_heavy_punch",

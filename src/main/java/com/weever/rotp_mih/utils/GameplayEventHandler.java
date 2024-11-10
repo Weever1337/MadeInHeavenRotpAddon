@@ -6,6 +6,7 @@ import com.github.standobyte.jojo.action.stand.TimeStop;
 import com.github.standobyte.jojo.capability.entity.LivingUtilCapProvider;
 import com.github.standobyte.jojo.capability.world.TimeStopHandler;
 import com.github.standobyte.jojo.capability.world.TimeStopInstance;
+import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.network.PacketManager;
 import com.github.standobyte.jojo.network.packets.fromclient.ClClickActionPacket;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
@@ -57,7 +58,7 @@ public class GameplayEventHandler {
                         int phase = WorldCapProvider.getClientTimeAccelPhase();
                         IStandPower power = IStandPower.getStandPowerOptional(livingEntity).orElse(null);
                         accelerateTime(livingEntity, phase, power);
-                        boostOnAcceleration(livingEntity, phase);
+                        boostOnAcceleration(livingEntity, (StandEntity) power.getStandManifestation(), phase);
                     }
                 }
             } else {
@@ -66,11 +67,14 @@ public class GameplayEventHandler {
         }
     }
 
-    private static void boostOnAcceleration(LivingEntity livingEntity, int timeAccelPhase) {
+    private static void boostOnAcceleration(LivingEntity livingEntity, StandEntity standEntity, int timeAccelPhase) {
         ModifiableAttributeInstance speed = livingEntity.getAttribute(Attributes.MOVEMENT_SPEED);
         ModifiableAttributeInstance swim = livingEntity.getAttribute(ForgeMod.SWIM_SPEED.get());
         if (livingEntity.isSprinting() || (livingEntity.isSwimming() && livingEntity.isInWater())) {
             livingEntity.getCapability(LivingUtilCapProvider.CAPABILITY).ifPresent(cap -> {
+                cap.addAfterimages(3, 100);
+            });
+            standEntity.getCapability(LivingUtilCapProvider.CAPABILITY).ifPresent(cap -> {
                 cap.addAfterimages(3, 100);
             });
             speed.removeModifier(SPEED);
