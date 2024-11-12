@@ -14,7 +14,7 @@
   "action.rotp_mih.mih_time_system.cast": "Time System: %s",
 
   "rotp_mih.time_system.acceleration": "Acceleration",
-  "rotp_mih.time_system.clear": "Clear",
+  "rotp_mih.time_system.clear": "Clear (%s)",
 
   "rotp_mih.subtitle.madeinheaven_summon": "\"Made in heaven!\"",
 

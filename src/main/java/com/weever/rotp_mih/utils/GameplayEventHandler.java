@@ -22,6 +22,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -33,9 +34,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -47,6 +46,7 @@ public class GameplayEventHandler {
     public static final Map<LivingEntity, Integer> entityTickCounters = new HashMap<>();
     public static final UUID SPEED = UUID.fromString("0e9584f4-6936-41fc-8ddb-ab20a4ba626a");
     public static final UUID SWIM = UUID.fromString("c4c806cc-b788-4503-aa45-6f35cb03f1ba");
+    public static List<LivingEntity> haveBoosts = new ArrayList<>();
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onAccelerate(LivingUpdateEvent event) {
@@ -59,6 +59,9 @@ public class GameplayEventHandler {
                         IStandPower power = IStandPower.getStandPowerOptional(livingEntity).orElse(null);
                         accelerateTime(livingEntity, phase, power);
                         boostOnAcceleration(livingEntity, (StandEntity) power.getStandManifestation(), phase);
+                        if (!haveBoosts.contains(livingEntity)) {
+                            haveBoosts.add(livingEntity);
+                        }
                     }
                 }
             } else {
@@ -71,34 +74,39 @@ public class GameplayEventHandler {
         ModifiableAttributeInstance speed = livingEntity.getAttribute(Attributes.MOVEMENT_SPEED);
         ModifiableAttributeInstance swim = livingEntity.getAttribute(ForgeMod.SWIM_SPEED.get());
         if (livingEntity.isSprinting() || (livingEntity.isSwimming() && livingEntity.isInWater())) {
-            livingEntity.getCapability(LivingUtilCapProvider.CAPABILITY).ifPresent(cap -> {
-                cap.addAfterimages(3, 100);
-            });
-            standEntity.getCapability(LivingUtilCapProvider.CAPABILITY).ifPresent(cap -> {
-                cap.addAfterimages(3, 100);
-            });
+            if (timeAccelPhase >= 4) {
+                livingEntity.getCapability(LivingUtilCapProvider.CAPABILITY).ifPresent(cap -> {
+                    cap.addAfterimages(3, 100);
+                });
+                standEntity.getCapability(LivingUtilCapProvider.CAPABILITY).ifPresent(cap -> {
+                    cap.addAfterimages(3, 100);
+                });
+                if (livingEntity instanceof ServerPlayerEntity) {
+                    AddonPackets.sendToClient(new ChangeMaxUpStepPacket(livingEntity.getId(), 1f + TimeUtil.getCalculatedPhase(timeAccelPhase) / 10), (ServerPlayerEntity) livingEntity);
+                }
+            }
             speed.removeModifier(SPEED);
             speed.addTransientModifier(new AttributeModifier(
-                    SPEED, "Acceleration", 0.2 * timeAccelPhase, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                    SPEED, "Acceleration", 0.3 * timeAccelPhase, AttributeModifier.Operation.MULTIPLY_TOTAL));
             swim.removeModifier(SWIM);
             swim.addTransientModifier(new AttributeModifier(
-                    SWIM, "Swim", 0.2 * timeAccelPhase, AttributeModifier.Operation.MULTIPLY_TOTAL));
-            if (livingEntity instanceof ServerPlayerEntity) {
-                AddonPackets.sendToClient(new ChangeMaxUpStepPacket(livingEntity.getId(), 1.6f), (ServerPlayerEntity) livingEntity);
-            }
+                    SWIM, "Swim", 0.3 * timeAccelPhase, AttributeModifier.Operation.MULTIPLY_TOTAL));
         } else {
             removeBoost(livingEntity);
         }
     }
 
     private static void removeBoost(LivingEntity livingEntity) {
-        ModifiableAttributeInstance speed = livingEntity.getAttribute(Attributes.MOVEMENT_SPEED);
-        ModifiableAttributeInstance swim = livingEntity.getAttribute(ForgeMod.SWIM_SPEED.get());
-        if (livingEntity instanceof ServerPlayerEntity) {
-            AddonPackets.sendToClient(new ChangeMaxUpStepPacket(livingEntity.getId(), .6f), (ServerPlayerEntity) livingEntity);
+        if (haveBoosts.contains(livingEntity)) {
+            haveBoosts.remove(livingEntity);
+            ModifiableAttributeInstance speed = livingEntity.getAttribute(Attributes.MOVEMENT_SPEED);
+            ModifiableAttributeInstance swim = livingEntity.getAttribute(ForgeMod.SWIM_SPEED.get());
+            if (livingEntity instanceof ServerPlayerEntity) {
+                AddonPackets.sendToClient(new ChangeMaxUpStepPacket(livingEntity.getId(), .6f), (ServerPlayerEntity) livingEntity);
+            }
+            speed.removeModifier(SPEED);
+            swim.removeModifier(SWIM);
         }
-        speed.removeModifier(SPEED);
-        swim.removeModifier(SWIM);
     }
 
     private static void accelerateTime(LivingEntity livingEntity, int timeAccelPhase, IStandPower power) {
@@ -111,8 +119,8 @@ public class GameplayEventHandler {
             if (WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).getTickCounter() % 2 == 0) {
                 multiplier = 20L * timeAccelPhase;
             }
-            if (WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).getTickCounter() % 100 == 0) { // TODO: 150 maybe?
-                if (timeAccelPhase <= 15) {
+            if (WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).getTickCounter() % 150 == 0) { // TODO: 150 maybe?
+                if (timeAccelPhase <= 30) {
                     timeAccelPhase++;
                 } else {
                     useAction(InitStands.MIH_UNIVERSE_RESET.get(), power);
@@ -148,8 +156,8 @@ public class GameplayEventHandler {
         IStandPower.getStandPowerOptional(livingEntity).ifPresent(power -> {
             if (power.getType() == null) return;
 
-            AtomicBoolean cont=new AtomicBoolean(false);
-            AtomicReference<TimeStop> timeStop= new AtomicReference<>();
+            AtomicBoolean cont = new AtomicBoolean(false);
+            AtomicReference<TimeStop> timeStop = new AtomicReference<>();
 
             power.getAllUnlockedActions().forEach(action -> {
                 if (action instanceof TimeStop) {

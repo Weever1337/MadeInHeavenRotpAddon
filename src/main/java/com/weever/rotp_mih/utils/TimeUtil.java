@@ -19,6 +19,7 @@ public class TimeUtil {
     public static int getCalculatedPhase(int phase) {
         int multiply;
         switch (phase) {
+            case 0:
             case 1: case 2: case 3: case 4: case 5:
                 multiply = 2;
                 break;
@@ -27,6 +28,15 @@ public class TimeUtil {
                 break;
             case 11: case 12: case 13: case 14: case 15:
                 multiply = 4;
+                break;
+            case 16: case 17: case 18: case 19: case 20:
+                multiply = 5;
+                break;
+            case 21: case 22: case 23: case 24: case 25:
+                multiply = 6;
+                break;
+            case 26: case 27: case 28: case 29: case 30:
+                multiply = 7;
                 break;
             default:
                 multiply = 1;

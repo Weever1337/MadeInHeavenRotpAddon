@@ -14,7 +14,7 @@
   "action.rotp_mih.mih_block": "Блокировать",
 
   "rotp_mih.time_system.acceleration": "Ускорить",
-  "rotp_mih.time_system.clear": "Очистить",
+  "rotp_mih.time_system.clear": "Очистить (%s)",
 
   "rotp_mih.subtitle.madeinheaven_summon": "\"Made in Heaven!\"",
 

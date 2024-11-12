@@ -22,11 +22,12 @@ public class LiquidWalking {
     private static boolean isLiquidWalking(LivingEntity entity, FluidState fluidState) {
         boolean doubleShift = entity.isShiftKeyDown() && entity.getCapability(PlayerUtilCapProvider.CAPABILITY).map(
                 PlayerUtilCap::getDoubleShiftPress).orElse(false);
+
         if (doubleShift) {
             return false;
         }
 
-        if (INonStandPower.getNonStandPowerOptional(entity).map(nonPower -> nonPower.getType() == ModPowers.HAMON.get() && nonPower.getTypeSpecificData(ModPowers.HAMON.get()).map(hamon -> hamon.isSkillLearned(ModHamonSkills.LIQUID_WALKING.get())).orElse(false)).orElse(false)) {
+        if (INonStandPower.getNonStandPowerOptional(entity).map(nonPower -> nonPower.getType() == ModPowers.HAMON.get() && nonPower.getTypeSpecificData(ModPowers.HAMON.get()).map(hamon -> hamon.isSkillLearned(ModHamonSkills.LIQUID_WALKING.get())).orElse(false) && nonPower.getEnergy() > 0).orElse(false)) {
             return false;
         }
 
@@ -34,9 +35,9 @@ public class LiquidWalking {
             if (TimeUtil.equalUUID(entity.getUUID()) && WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && WorldCapProvider.getClientTimeAccelPhase() >= 2) {
                 if (power.getType() == InitStands.MADE_IN_HEAVEN.getStandType() && power.isActive()) {
                     if (entity.isSprinting()) {
-                        if (power.getStamina() >= 0) {
-                            entity.setOnGround(true);
+                        if (power.getStamina() > 0) {
                             if (!entity.level.isClientSide()) {
+                                entity.setOnGround(true);
                                 if (fluidState.getType().is(FluidTags.LAVA) && !entity.fireImmune()) {
                                     entity.hurt(DamageSource.HOT_FLOOR, 1.0f);
                                 }

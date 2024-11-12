@@ -48,7 +48,7 @@ public class TimeSystem extends StandEntityAction {
     public IFormattableTextComponent getTranslatedName(IStandPower power, String key) {
         LivingEntity user = power.getUser();
         if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && TimeUtil.equalUUID(user.getUUID())) {
-            return new TranslationTextComponent(key + ".cast", new TranslationTextComponent("rotp_mih.time_system.clear"));
+            return new TranslationTextComponent(key + ".cast", new TranslationTextComponent("rotp_mih.time_system.clear", TimeUtil.getCalculatedPhase(WorldCapProvider.getClientTimeAccelPhase())));
         } else {
             return new TranslationTextComponent(key + ".cast", new TranslationTextComponent("rotp_mih.time_system.acceleration"));
         }
@@ -67,7 +67,7 @@ public class TimeSystem extends StandEntityAction {
     @Override
     public ResourceLocation getIconTexture(@Nullable IStandPower power) {
         if (power != null) {
-            if (TimeUtil.equalUUID(power.getUser().getUUID())) {
+            if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && TimeUtil.equalUUID(power.getUser().getUUID())) {
                 return clearTex.get();
             } else {
                 return accelerationTex.get();

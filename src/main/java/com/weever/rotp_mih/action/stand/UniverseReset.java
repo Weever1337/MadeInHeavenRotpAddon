@@ -34,7 +34,6 @@ public class UniverseReset extends StandEntityAction {
                 world.getEntitiesOfClass(LivingEntity.class, user.getBoundingBox().inflate(16 * 12), EntityPredicates.ENTITY_STILL_ALIVE).forEach(
                         livingEntity -> {
                             if (livingEntity == user || livingEntity == standEntity) {
-                                MCUtil.runCommand(user, "particle rotp_mih:spark " + user.getX() + " " + user.getY() + " " + user.getZ() + " .5 .5 .5 1 30");
                                 livingEntity.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 180 * 20, 4, false, false, true));
                                 userPower.setCooldownTimer(InitStands.MIH_TIME_SYSTEM.get(), 20 * 60);
                             } else {

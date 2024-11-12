@@ -31,7 +31,7 @@ public class LightSpeedDash extends StandEntityAction {
         LivingEntity user = userPower.getUser();
         if (!world.isClientSide()) {
             user.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 10, 99, false, false));
-            user.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 10, 4, false, false));
+            user.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 10, 14, false, false));
             user.addEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 10, 19, false, false));
         }
     }

@@ -6,15 +6,18 @@ import com.github.standobyte.jojo.action.stand.StandAction;
 import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
+import com.github.standobyte.jojo.init.ModStatusEffects;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
-import com.weever.rotp_mih.init.InitParticles;
+import com.weever.rotp_mih.init.InitSounds;
 import com.weever.rotp_mih.init.InitStands;
 import com.weever.rotp_mih.utils.ParticleUtils;
 import com.weever.rotp_mih.utils.TimeUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityPredicates;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
@@ -26,8 +29,8 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public class ThroatSlice extends StandEntityAction {
-    private static final double RANGE = 7.0;
-    private static final float DAMAGE = 5.0f;
+    private static final double RANGE = 3.0;
+    private static final float DAMAGE = 3.0f;
 
     public ThroatSlice(Builder builder) {
         super(builder);
@@ -50,25 +53,28 @@ public class ThroatSlice extends StandEntityAction {
 
             List<LivingEntity> targets = world.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(startVec, lookAt), EntityPredicates.ENTITY_STILL_ALIVE.and(e -> e != user && e != standEntity));
             targets.forEach(
-                    target -> target.hurt(DamageSource.playerAttack((PlayerEntity) userPower.getUser()), DAMAGE)
+                    target -> {
+                        int duration = 150;
+                        int amplifier = 2;
+
+                        EffectInstance existingEffect = target.getEffect(ModStatusEffects.BLEEDING.get());
+                        if (existingEffect != null) {
+                            duration += existingEffect.getDuration();
+                            amplifier = Math.min(existingEffect.getAmplifier() + 1, 6);
+                        }
+                        target.addEffect(new EffectInstance(ModStatusEffects.BLEEDING.get(), duration, amplifier, false, false, true));
+                        target.hurt(DamageSource.playerAttack((PlayerEntity) userPower.getUser()), DAMAGE);
+                    }
             );
             user.teleportTo(lookAt.x, lookAt.y, lookAt.z);
-        } else {
-            Vector3d startVec = user.position().add(0, user.getEyeHeight(), 0);
-            Vector3d lookAt = customLookAt(world, user);
-            ParticleUtils.createLine(InitParticles.SPARK.get(), world, startVec, lookAt, 100);
         }
     }
 
     @Override
     public void onTaskSet(World world, StandEntity standEntity, IStandPower userPower, Phase phase, StandEntityTask task, int ticks) {
-//        if (MadeInHeavenStandType.isValue(TimeUtil.Values.ACCELERATION)) {
-//            if (!world.isClientSide()) {
-//                world.playSound(null, standEntity.blockPosition(), InitSounds.MIH_THROAT_SLICE.get(), SoundCategory.PLAYERS, 1, 1);
-//            }
-//        } else {
-//            userPower.setCooldownTimer(InitStands.MIH_THROAT_SLICE.get(), 0);
-//        }
+        if (!world.isClientSide()) {
+            world.playSound(null, standEntity.blockPosition(), InitSounds.MIH_THROAT_SLICE.get(), SoundCategory.PLAYERS, 1, 1);
+        }
     }
 
     private static Vector3d customLookAt(World world, LivingEntity user) {
@@ -83,12 +89,5 @@ public class ThroatSlice extends StandEntityAction {
             endVec = blockRayTraceResult.getLocation();
         }
         return endVec;
-    }
-
-    @Override
-    public StandAction[] getExtraUnlockable() {
-        return new StandAction[] {
-                InitStands.MIH_UNIVERSE_RESET.get()
-        };
     }
 }

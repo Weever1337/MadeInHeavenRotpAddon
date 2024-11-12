@@ -1,7 +1,10 @@
 package com.weever.rotp_mih;
 
 import com.weever.rotp_mih.addoncompat.OptionalDependencyHelper;
-import com.weever.rotp_mih.init.*;
+import com.weever.rotp_mih.init.InitCapabilities;
+import com.weever.rotp_mih.init.InitEntities;
+import com.weever.rotp_mih.init.InitSounds;
+import com.weever.rotp_mih.init.InitStands;
 import com.weever.rotp_mih.network.AddonPackets;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -22,7 +25,6 @@ public class MadeInHeavenAddon {
         InitSounds.SOUNDS.register(modEventBus);
         InitStands.ACTIONS.register(modEventBus);
         InitStands.STANDS.register(modEventBus);
-        InitParticles.PARTICLES.register(modEventBus);
         modEventBus.addListener(this::onFMLCommonSetup);
     }
 
