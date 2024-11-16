@@ -4,28 +4,20 @@
 
   "action.rotp_mih.mih_punch": "Punch",
   "action.rotp_mih.mih_heavy_punch": "Heavy Punch",
-  "action.rotp_mih.mih_impale": "Impale",
+  "action.rotp_mih.mih_chop": "Chop",
   "action.rotp_mih.mih_barrage": "Barrage",
 
   "action.rotp_mih.mih_dash": "Light Speed Dash",
-  "action.rotp_mih.mih_two_steps": "Two Steps Behind",
-  "action.rotp_mih.mih_time_system": "Time System",
   "action.rotp_mih.mih_universe_reset": "Universe Reset",
-  "action.rotp_mih.mih_throat_slice": "Throat Slice",
   "action.rotp_mih.mih_block": "Block",
+  "action.rotp_mih.mih_throat_slice": "Throat Slice",
+  "action.rotp_mih.mih_time_system.cast": "Time System: %s",
+
+  "rotp_mih.time_system.acceleration": "Acceleration",
+  "rotp_mih.time_system.clear": "Clear",
 
   "rotp_mih.subtitle.madeinheaven_summon": "\"Made in heaven!\"",
 
-  "effect.rotp_mih.bleeding": "Bleeding",
-  "effect.rotp_mih.acceleration": "Acceleration",
-  "jojo.command.desc.cum": "Make a player cumming // Added in Made in Heaven addon",
-
-  "timeSystem.clear": "Clear",
-  "timeSystem.acceleration": "Time Acceleration",
-  "timeSystem.slow": "Slow Time",
-  "rotp_mih.select_time_system": "Select Time Manipulation",
-
-  "rotp_mih.message.action_condition.cant_use_without_timeaccel": "You can not use this action without time acceleration",
-  "rotp_mih.message.action_condition.already_time_manipulation": "Someone already manipulating time",
-  "rotp_mih.message.action_condition.already_cleared": "There's no more time manipulation"
+  "rotp_mih.message.action_condition.cant_use_without_acceleration": "You can not use this action without time acceleration",
+  "rotp_mih.message.action_condition.already_time_manipulation": "Someone already manipulating time"
 }

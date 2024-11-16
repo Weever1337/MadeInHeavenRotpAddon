@@ -9,27 +9,24 @@ import com.github.standobyte.jojo.power.impl.stand.stats.StandStats;
 import com.github.standobyte.jojo.power.impl.stand.type.EntityStandType;
 import com.github.standobyte.jojo.power.impl.stand.type.StandType;
 import com.github.standobyte.jojo.util.mod.StoryPart;
-import com.weever.rotp_mih.RotpMadeInHeavenAddon;
+import com.weever.rotp_mih.MadeInHeavenAddon;
 import com.weever.rotp_mih.action.stand.*;
-import com.weever.rotp_mih.action.stand.gui.TimeSystemReleaseAcceleration;
-import com.weever.rotp_mih.action.stand.gui.TimeSystemReleaseClear;
-import com.weever.rotp_mih.action.stand.gui.TimeSystemReleaseSlow;
-import com.weever.rotp_mih.entity.stand.stands.MihEntity;
+import com.weever.rotp_mih.entity.MadeInHeavenEntity;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 public class InitStands {
     @SuppressWarnings("unchecked")
     public static final DeferredRegister<Action<?>> ACTIONS = DeferredRegister.create(
-            (Class<Action<?>>) ((Class<?>) Action.class), RotpMadeInHeavenAddon.MOD_ID);
+            (Class<Action<?>>) ((Class<?>) Action.class), MadeInHeavenAddon.MOD_ID);
     @SuppressWarnings("unchecked")
     public static final DeferredRegister<StandType<?>> STANDS = DeferredRegister.create(
-            (Class<StandType<?>>) ((Class<?>) StandType.class), RotpMadeInHeavenAddon.MOD_ID);
+            (Class<StandType<?>>) ((Class<?>) StandType.class), MadeInHeavenAddon.MOD_ID);
 
-    // ======================================== Made In Heaven! ========================================
+    // ======================================== Made In Heaven ========================================
 
     public static final RegistryObject<StandEntityAction> MIH_PUNCH = ACTIONS.register("mih_punch",
-            () -> new StandEntityLightAttack(new StandEntityLightAttack.Builder()));
+            () -> new StandEntityLightAttack(new StandEntityLightAttack.Builder().cooldown(3)));
 
     public static final RegistryObject<StandEntityAction> MIH_BARRAGE = ACTIONS.register("mih_barrage",
             () -> new StandEntityMeleeBarrage(new StandEntityMeleeBarrage.Builder()
@@ -37,83 +34,55 @@ public class InitStands {
                     .shout(InitSounds.MIH_BARRAGE_USER))
     );
 
-    public static final RegistryObject<StandEntityHeavyAttack> MIH_IMPALE = ACTIONS.register("mih_impale",
-            () -> new Impale(new StandEntityHeavyAttack.Builder().shout(InitSounds.MIH_IMPALE_USER)
-                    .partsRequired(StandPart.ARMS))
+    public static final RegistryObject<StandEntityHeavyAttack> MIH_CHOP = ACTIONS.register("mih_chop",
+            () -> new Chop(new StandEntityHeavyAttack.Builder()
+                    .shout(InitSounds.MIH_CHOP_USER)
+                    .partsRequired(StandPart.ARMS)
+                    .cooldown(25))
     );
 
     public static final RegistryObject<StandEntityHeavyAttack> MIH_HEAVY_PUNCH = ACTIONS.register("mih_heavy_punch",
             () -> new StandEntityHeavyAttack(new StandEntityHeavyAttack.Builder()
                     .partsRequired(StandPart.ARMS)
-                    .setFinisherVariation(MIH_IMPALE)
+                    .setFinisherVariation(MIH_CHOP)
                     .shout(InitSounds.MIH_HEAVY_PUNCH_USER)
                     .shiftVariationOf(MIH_PUNCH).shiftVariationOf(MIH_BARRAGE))
     );
 
     public static final RegistryObject<StandEntityAction> MIH_THROAT_SLICE = ACTIONS.register("mih_throat_slice",
             () -> new ThroatSlice(new StandEntityAction.Builder()
-                    .partsRequired(StandPart.MAIN_BODY)
-                    .staminaCost(150).cooldown(100, 100).resolveLevelToUnlock(1)
-                    .holdToFire(10, false)
+                    .partsRequired(StandPart.ARMS)
+                    .staminaCost(150).cooldown(160, 160).resolveLevelToUnlock(1)
             )
     );
 
     public static final RegistryObject<StandEntityAction> MIH_DASH = ACTIONS.register("mih_dash",
             () -> new LightSpeedDash(new StandEntityAction.Builder()
                     .standAutoSummonMode(StandEntityAction.AutoSummonMode.OFF_ARM)
-                    //.standSound(InitSounds.MIH_DASH).shout(InitSounds.MIH_DASH_USER)
-                    .staminaCost(100).cooldown(50, 50).resolveLevelToUnlock(1)
-                    .partsRequired(StandPart.MAIN_BODY))
-    );
-
-    public static final RegistryObject<StandEntityAction> MIH_TWO_STEPS = ACTIONS.register("mih_two_steps",
-            () -> new TwoStepsBehind(new StandEntityAction.Builder()
-                    .partsRequired(StandPart.ARMS)
-                    //.standSound(InitSounds.MIH_TWO_STEPS)
-                    .staminaCost(50).cooldown(100, 100).resolveLevelToUnlock(1)
-                    .holdToFire(15, true))
-    );
-
-    public static final RegistryObject<StandEntityAction> MIH_UNIVERSE_RESET = ACTIONS.register("mih_universe_reset",
-            () -> new UniverseReset(new StandEntityAction.Builder().standPerformDuration(500).standUserWalkSpeed(1F)
-                    .staminaCost(300).cooldown(5550, 5550).resolveLevelToUnlock(4)
-                    .standSound(InitSounds.MIH_UNIVERSE_RESET).shout(InitSounds.MIH_UNIVERSE_RESET_USER)
-                    .partsRequired(StandPart.MAIN_BODY))
-    );
-
-    public static final RegistryObject<StandEntityAction> MIH_TIME_SYSTEM_MENU = ACTIONS.register("mih_time_system",
-            () -> new TimeSystemMenuStandEntityAction(new StandEntityAction.Builder()
-                    .cooldown(10, 10).resolveLevelToUnlock(1)
-                    .holdToFire(10, false)
-                    .partsRequired(StandPart.MAIN_BODY)
-            )
-    );
-
-    public static final RegistryObject<StandEntityAction> MIH_TIME_SYSTEM_CLEAR = ACTIONS.register("mih_time_system_clear",
-            () -> new TimeSystemReleaseClear(new StandEntityAction.Builder()
-                    .partsRequired(StandPart.MAIN_BODY)
-                    .ignoresPerformerStun()
-            )
-    );
-
-    public static final RegistryObject<StandEntityAction> MIH_TIME_SYSTEM_ACCELERATION = ACTIONS.register("mih_time_system_acceleration",
-            () -> new TimeSystemReleaseAcceleration(new StandEntityAction.Builder()
-                    .partsRequired(StandPart.MAIN_BODY)
-                    .ignoresPerformerStun()
-            )
-    );
-
-    public static final RegistryObject<StandEntityAction> MIH_TIME_SYSTEM_SLOW = ACTIONS.register("mih_time_system_slow",
-            () -> new TimeSystemReleaseSlow(new StandEntityAction.Builder()
-                    .partsRequired(StandPart.MAIN_BODY)
-                    .ignoresPerformerStun()
-            )
+                    //.shout(InitSounds.MIH_DASH_USER)
+                    //.standSound(InitSounds.MIH_DASH)
+                    .staminaCost(150).cooldown(50, 50).resolveLevelToUnlock(1)
+                    .partsRequired(StandPart.LEGS)
+                    .holdType(3))
     );
 
     public static final RegistryObject<StandEntityAction> MIH_BLOCK = ACTIONS.register("mih_block",
             () -> new StandEntityBlock());
 
-    public static final EntityStandRegistryObject<EntityStandType<StandStats>, StandEntityType<MihEntity>> MIH =
+    public static final RegistryObject<StandEntityAction> MIH_TIME_SYSTEM = ACTIONS.register("mih_time_system",
+            () -> new TimeSystem(new StandEntityAction.Builder()
+                    .autoSummonStand()
+                    .partsRequired(StandPart.MAIN_BODY))
+    );
+
+    public static final RegistryObject<StandEntityAction> MIH_UNIVERSE_RESET = ACTIONS.register("mih_universe_reset",
+            () -> new UniverseReset(new StandEntityAction.Builder()
+                    .staminaCost(500).resolveLevelToUnlock(4)
+                    .partsRequired(StandPart.MAIN_BODY)
+                    .shout(InitSounds.MIH_UNIVERSE_RESET_USER))
+    );
+
+    public static final EntityStandRegistryObject<EntityStandType<StandStats>, StandEntityType<MadeInHeavenEntity>> MADE_IN_HEAVEN =
             new EntityStandRegistryObject<>("madeinheaven",
                     STANDS,
                     () -> new EntityStandType.Builder<>()
@@ -127,8 +96,15 @@ public class InitStands {
                             .rightClickHotbar(
                                     MIH_BLOCK.get(),
                                     MIH_DASH.get(),
-                                    MIH_TWO_STEPS.get(),
-                                    MIH_TIME_SYSTEM_MENU.get()
+                                    MIH_TIME_SYSTEM.get()
+                            )
+                            .defaultKey(
+                                    MIH_THROAT_SLICE.get(),
+                                    "key.keyboard.x"
+                            )
+                            .defaultKey(
+                                    MIH_DASH.get(),
+                                    "key.keyboard.c"
                             )
                             .defaultStats(StandStats.class, new StandStats.Builder()
                                     .power(13.0)
@@ -139,12 +115,14 @@ public class InitStands {
                                     .randomWeight(0.1)
                             )
                             .addOst(InitSounds.MIH_OST)
-                            .addSummonShout(InitSounds.MIH_SUMMON)
+                            .addSummonShout(InitSounds.MIH_SUMMON_USER)
                             .build(),
 
                     InitEntities.ENTITIES,
-                    () -> new StandEntityType<>(MihEntity::new, 0.65F, 1.75F)
+                    () -> new StandEntityType<>(MadeInHeavenEntity::new, 0.7F, 1.8F)
                             .summonSound(InitSounds.MIH_SUMMON)
                             .unsummonSound(InitSounds.MIH_UNSUMMON)
                     ).withDefaultStandAttributes();
+
+    public static final EntityStandRegistryObject<EntityStandType<StandStats>, StandEntityType<MadeInHeavenEntity>> MIH = MADE_IN_HEAVEN;
 }

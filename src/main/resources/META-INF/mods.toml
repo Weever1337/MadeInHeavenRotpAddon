@@ -11,7 +11,13 @@ logoFile="logo.png"
 credits="StandoByte, Makuta Zeml"
 description='''
 An Addon that adds Made in Heaven to Ripples of the Past.
-'''
+
+Localization (Discords):
+- English (en_us): weeverlegend
+- Ukrainian (uk_ua): weeverlegend
+- Russian (ru_ru): weeverlegend
+- Chinese (zh_cn): johnny_joestar2804'''
+
 [[dependencies.${mod_id}]]
 modId="forge"
 mandatory=true
@@ -33,6 +39,6 @@ side="BOTH"
 [[dependencies.${mod_id}]]
 modId="hourglass"
 mandatory=true
-versionRange="[1.2.1.0,1.3)"
+versionRange="[1.2,1.3)"
 ordering="AFTER"
 side="BOTH"
