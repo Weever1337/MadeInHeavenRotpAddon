@@ -7,7 +7,9 @@ import com.weever.rotp_mih.init.InitSounds;
 import com.weever.rotp_mih.init.InitStands;
 import com.weever.rotp_mih.network.AddonPackets;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
@@ -26,6 +28,7 @@ public class MadeInHeavenAddon {
         InitStands.ACTIONS.register(modEventBus);
         InitStands.STANDS.register(modEventBus);
         modEventBus.addListener(this::onFMLCommonSetup);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, MadeInHeavenConfig.clientSpec);
     }
 
     private void onFMLCommonSetup(FMLCommonSetupEvent event) {

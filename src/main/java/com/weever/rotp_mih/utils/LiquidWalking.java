@@ -32,16 +32,16 @@ public class LiquidWalking {
         }
 
         return IStandPower.getStandPowerOptional(entity).map(power -> {
-            if (TimeUtil.equalUUID(entity.getUUID()) && WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && WorldCapProvider.getClientTimeAccelPhase() >= 2) {
+            if (TimeUtil.equalUUID(entity.getUUID()) && WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && WorldCapProvider.getClientTimeAccelPhase() >= TimeUtil.GIVE_BUFFS) {
                 if (power.getType() == InitStands.MADE_IN_HEAVEN.getStandType() && power.isActive()) {
-                    if (entity.isSprinting()) {
+                    if (entity.isSprinting() && !entity.isCrouching()) {
                         if (power.getStamina() > 0) {
                             if (!entity.level.isClientSide()) {
                                 entity.setOnGround(true);
                                 if (fluidState.getType().is(FluidTags.LAVA) && !entity.fireImmune()) {
                                     entity.hurt(DamageSource.HOT_FLOOR, 1.0f);
                                 }
-                                power.consumeStamina(1f);
+                                power.consumeStamina(2f);
                             }
                             return true;
                         }

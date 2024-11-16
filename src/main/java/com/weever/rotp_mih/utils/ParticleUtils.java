@@ -9,6 +9,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
+@SuppressWarnings("unused")
 public class ParticleUtils {
     public static void createBall(IParticleData particle, Vector3d vec, World world, int size, float speed) {
         if (!world.isClientSide())
@@ -126,20 +127,4 @@ public class ParticleUtils {
 //            }
 //        }
 //    }
-
-    public static void createSpiral(IParticleData particleData, World world, Vector3d center, double radius, int amount) {
-        if (!world.isClientSide())
-            return;
-
-        // spiral:
-
-        for (int i = 0; i < amount; i++) {
-            double angle = i * Math.PI * 2 / amount;
-            double x = center.x + radius * MathHelper.cos((float) angle);
-            double z = center.z + radius * MathHelper.sin((float) angle);
-            double y = center.y;
-
-            world.addParticle(particleData, x, y, z, 0, 0, 0);
-        }
-    }
 }

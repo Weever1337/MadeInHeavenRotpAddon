@@ -22,7 +22,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -51,17 +50,18 @@ public class GameplayEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onAccelerate(LivingUpdateEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
-        if (!livingEntity.level.isClientSide()) {
+        if (livingEntity != null && !livingEntity.level.isClientSide()) {
             if (TimeUtil.equalUUID(livingEntity.getUUID())) {
                 if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION) {
                     if (IStandPower.getStandPowerOptional(livingEntity).isPresent() && IStandPower.getStandPowerOptional(livingEntity).map(p -> p.getType() == InitStands.MADE_IN_HEAVEN.getStandType()).orElse(false)) {
+                        if (TimeStopHandler.isTimeStopped(livingEntity.level, livingEntity.blockPosition())) {
+                            return;
+                        }
+
                         int phase = WorldCapProvider.getClientTimeAccelPhase();
                         IStandPower power = IStandPower.getStandPowerOptional(livingEntity).orElse(null);
                         accelerateTime(livingEntity, phase, power);
                         boostOnAcceleration(livingEntity, (StandEntity) power.getStandManifestation(), phase);
-                        if (!haveBoosts.contains(livingEntity)) {
-                            haveBoosts.add(livingEntity);
-                        }
                     }
                 }
             } else {
@@ -71,32 +71,40 @@ public class GameplayEventHandler {
     }
 
     private static void boostOnAcceleration(LivingEntity livingEntity, StandEntity standEntity, int timeAccelPhase) {
+        if (livingEntity == null || standEntity == null) return;
+
         ModifiableAttributeInstance speed = livingEntity.getAttribute(Attributes.MOVEMENT_SPEED);
         ModifiableAttributeInstance swim = livingEntity.getAttribute(ForgeMod.SWIM_SPEED.get());
         if (livingEntity.isSprinting() || (livingEntity.isSwimming() && livingEntity.isInWater())) {
-            if (timeAccelPhase >= 4) {
+            if (!haveBoosts.contains(livingEntity)) {
+                haveBoosts.add(livingEntity);
+            }
+            if (timeAccelPhase >= TimeUtil.GIVE_BUFFS) {
                 livingEntity.getCapability(LivingUtilCapProvider.CAPABILITY).ifPresent(cap -> {
-                    cap.addAfterimages(3, 100);
+                    cap.addAfterimages(3, 75);
                 });
                 standEntity.getCapability(LivingUtilCapProvider.CAPABILITY).ifPresent(cap -> {
-                    cap.addAfterimages(3, 100);
+                    cap.addAfterimages(3, 75);
                 });
                 if (livingEntity instanceof ServerPlayerEntity) {
-                    AddonPackets.sendToClient(new ChangeMaxUpStepPacket(livingEntity.getId(), 1f + TimeUtil.getCalculatedPhase(timeAccelPhase) / 10), (ServerPlayerEntity) livingEntity);
+                    AddonPackets.sendToClient(new ChangeMaxUpStepPacket(livingEntity.getId(), 1f + (float) TimeUtil.getCalculatedPhase(timeAccelPhase) / 10), (ServerPlayerEntity) livingEntity);
                 }
             }
+
             speed.removeModifier(SPEED);
             speed.addTransientModifier(new AttributeModifier(
-                    SPEED, "Acceleration", 0.3 * timeAccelPhase, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                    SPEED, "Acceleration", 0.4 * timeAccelPhase, AttributeModifier.Operation.MULTIPLY_TOTAL));
             swim.removeModifier(SWIM);
             swim.addTransientModifier(new AttributeModifier(
-                    SWIM, "Swim", 0.3 * timeAccelPhase, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                    SWIM, "Swim", 0.4 * timeAccelPhase, AttributeModifier.Operation.MULTIPLY_TOTAL));
         } else {
             removeBoost(livingEntity);
         }
     }
 
     private static void removeBoost(LivingEntity livingEntity) {
+        if (livingEntity == null) return;
+
         if (haveBoosts.contains(livingEntity)) {
             haveBoosts.remove(livingEntity);
             ModifiableAttributeInstance speed = livingEntity.getAttribute(Attributes.MOVEMENT_SPEED);
@@ -110,16 +118,14 @@ public class GameplayEventHandler {
     }
 
     private static void accelerateTime(LivingEntity livingEntity, int timeAccelPhase, IStandPower power) {
+        if (livingEntity == null) return;
         MadeInHeavenEntity stand = (MadeInHeavenEntity) power.getStandManifestation();
         if (power.isActive() && stand != null && !stand.isArmsOnlyMode()) {
-            if (TimeStopHandler.isTimeStopped(livingEntity.level, livingEntity.blockPosition())) {
-                return;
-            }
             long multiplier = 0;
             if (WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).getTickCounter() % 2 == 0) {
                 multiplier = 20L * timeAccelPhase;
             }
-            if (WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).getTickCounter() % 150 == 0) { // TODO: 150 maybe?
+            if (WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).getTickCounter() % 150 == 0) {
                 if (timeAccelPhase <= 30) {
                     timeAccelPhase++;
                 } else {
@@ -132,7 +138,7 @@ public class GameplayEventHandler {
             WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).setTimeAccelerationPhase(timeAccelPhase);
             ((ServerWorld) livingEntity.level).setDayTime(livingEntity.level.getDayTime() + multiplier);
             if (!livingEntity.getDeltaMovement().equals(Vector3d.ZERO)) {
-                power.consumeStamina(livingEntity.getSpeed() * 15);
+                power.consumeStamina(livingEntity.getSpeed() * 30);
             }
         } else {
             WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).setTimeManipulatorUUID(null);
@@ -148,24 +154,23 @@ public class GameplayEventHandler {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.NORMAL)
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onLivingUpdate(LivingUpdateEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
         if (livingEntity == null || livingEntity.level.isClientSide()) return;
 
         IStandPower.getStandPowerOptional(livingEntity).ifPresent(power -> {
-            if (power.getType() == null) return;
+            if (power.getType() == null && TimeUtil.equalUUID(livingEntity.getUUID())) return;
 
-            AtomicBoolean cont = new AtomicBoolean(false);
             AtomicReference<TimeStop> timeStop = new AtomicReference<>();
 
             power.getAllUnlockedActions().forEach(action -> {
                 if (action instanceof TimeStop) {
-                    cont.set(true);
                     timeStop.set((TimeStop) action);
                 }
             });
 
+            if (timeStop.get() == null) return;
             if (WorldCapProvider.getClientTimeData() == TimeData.ACCELERATION) {
                 if (TimeStopHandler.isTimeStopped(livingEntity.level, livingEntity.blockPosition())) {
                     entityTickCounters.putIfAbsent(livingEntity, 0);

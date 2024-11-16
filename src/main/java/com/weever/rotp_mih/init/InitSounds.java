@@ -25,16 +25,12 @@ public class InitSounds {
             () -> new SoundEvent(new ResourceLocation(MadeInHeavenAddon.MOD_ID, "mih_barrage"))
     );
 
-    public static final Supplier<SoundEvent> MIH_IMPALE = SOUNDS.register("mih_impale",
-            () -> new SoundEvent(new ResourceLocation(MadeInHeavenAddon.MOD_ID, "mih_impale"))
+    public static final Supplier<SoundEvent> MIH_CHOP = SOUNDS.register("mih_chop",
+            () -> new SoundEvent(new ResourceLocation(MadeInHeavenAddon.MOD_ID, "mih_chop"))
     );
 
     public static final Supplier<SoundEvent> MIH_DASH = SOUNDS.register("mih_dash",
             () -> new SoundEvent(new ResourceLocation(MadeInHeavenAddon.MOD_ID, "mih_dash"))
-    );
-
-    public static final Supplier<SoundEvent> MIH_TWO_STEPS = SOUNDS.register("mih_two_steps",
-            () -> new SoundEvent(new ResourceLocation(MadeInHeavenAddon.MOD_ID, "mih_two_steps"))
     );
 
     public static final Supplier<SoundEvent> MIH_THROAT_SLICE = SOUNDS.register("mih_throat_slice",
@@ -43,10 +39,6 @@ public class InitSounds {
 
     public static final Supplier<SoundEvent> MIH_TIME_ACCELERATION = SOUNDS.register("mih_time_acceleration",
             () -> new SoundEvent(new ResourceLocation(MadeInHeavenAddon.MOD_ID, "mih_time_acceleration"))
-    );
-
-    public static final Supplier<SoundEvent> MIH_UNIVERSE_RESET = SOUNDS.register("mih_universe_reset",
-            () -> new SoundEvent(new ResourceLocation(MadeInHeavenAddon.MOD_ID, "mih_universe_reset"))
     );
 
     // ======================================== USER ========================================
@@ -62,8 +54,8 @@ public class InitSounds {
             () -> new SoundEvent(new ResourceLocation(MadeInHeavenAddon.MOD_ID, "mih_heavy_punch_user"))
     );
 
-    public static final Supplier<SoundEvent> MIH_IMPALE_USER = SOUNDS.register("mih_impale_user",
-            () -> new SoundEvent(new ResourceLocation(MadeInHeavenAddon.MOD_ID, "mih_impale_user"))
+    public static final Supplier<SoundEvent> MIH_CHOP_USER = SOUNDS.register("mih_chop_user",
+            () -> new SoundEvent(new ResourceLocation(MadeInHeavenAddon.MOD_ID, "mih_chop_user"))
     );
 
     public static final Supplier<SoundEvent> MIH_DASH_USER = SOUNDS.register("mih_dash_user",

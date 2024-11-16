@@ -12,6 +12,8 @@ import net.minecraft.world.World;
 import java.util.UUID;
 
 public class TimeUtil {
+    public static int GIVE_BUFFS = 4;
+
     public static void multiplyProjectileSpeed(ProjectileEntity projectile, int n) {
         projectile.setDeltaMovement(projectile.getDeltaMovement().scale(n));
     }
@@ -45,8 +47,8 @@ public class TimeUtil {
         return multiply;
     }
 
-    public static boolean checkConditions(LivingEntity user, IStandPower power, boolean specificAbility) {
-        boolean checkForTimeData = WorldCapProvider.getClientTimeData() == TimeData.NONE && !specificAbility;
+    public static boolean checkConditions(LivingEntity user, IStandPower power, boolean timeSystem) {
+        boolean checkForTimeData = WorldCapProvider.getClientTimeData() == TimeData.NONE && !timeSystem;
         if (WorldCapProvider.getClientTimeData() != TimeData.NONE && equalUUID(user.getUUID())) checkForTimeData = true;
         return power.getType() == InitStands.MADE_IN_HEAVEN.getStandType() &&
                 user.level.dimension() == World.OVERWORLD &&

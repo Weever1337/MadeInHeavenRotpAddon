@@ -2,6 +2,7 @@ package com.weever.rotp_mih.mixin;
 
 import com.weever.rotp_mih.capability.world.WorldCap;
 import com.weever.rotp_mih.capability.world.WorldCapProvider;
+import com.weever.rotp_mih.utils.TimeUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -21,10 +22,8 @@ public abstract class ProjectileEntityMixin extends Entity {
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
-        if (this.getEntity().tickCount % 20 == 0) {
-            if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION) {
-                multiplyProjectileSpeed((ProjectileEntity) this.getEntity(), WorldCapProvider.getClientTimeAccelPhase() / 2);
-            }
+        if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION) {
+            multiplyProjectileSpeed((ProjectileEntity) this.getEntity(), TimeUtil.getCalculatedPhase(WorldCapProvider.getClientTimeAccelPhase()));
         }
     }
 }

@@ -52,7 +52,7 @@ public class Chop extends StandEntityHeavyAttack {
         standEntity.alternateHands();
         if (!world.isClientSide()) {
             standEntity.addFinisherMeter(-0.51F, 0);
-            world.playSound(null,standEntity.blockPosition(), InitSounds.MIH_IMPALE.get(), SoundCategory.PLAYERS,1,1);
+            world.playSound(null, standEntity.blockPosition(), InitSounds.MIH_CHOP.get(), SoundCategory.VOICE, 1, 1);
         }
     }
 }

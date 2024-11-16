@@ -31,6 +31,5 @@ public class ClientInit {
                         return StandStatsRenderer.ICosmeticStandStats.super.statRankLetter(stat, standData, statConvertedValue);
                     }
                 });
-        ClientEventHandler.init(mc);
     }
 }

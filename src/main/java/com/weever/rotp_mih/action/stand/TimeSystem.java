@@ -1,5 +1,6 @@
 package com.weever.rotp_mih.action.stand;
 
+import com.github.standobyte.jojo.action.Action;
 import com.github.standobyte.jojo.action.ActionConditionResult;
 import com.github.standobyte.jojo.action.ActionTarget;
 import com.github.standobyte.jojo.action.stand.StandEntityAction;
@@ -7,11 +8,16 @@ import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.github.standobyte.jojo.util.general.LazySupplier;
+import com.github.standobyte.jojo.util.mod.JojoModUtil;
+import com.weever.rotp_mih.MadeInHeavenAddon;
+import com.weever.rotp_mih.MadeInHeavenConfig;
 import com.weever.rotp_mih.capability.world.WorldCap;
 import com.weever.rotp_mih.capability.world.WorldCapProvider;
+import com.weever.rotp_mih.init.InitSounds;
 import com.weever.rotp_mih.utils.TimeUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -40,6 +46,8 @@ public class TimeSystem extends StandEntityAction {
             } else if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.NONE) {
                 WorldCapProvider.getWorldCap((ServerWorld) user.level).setTimeManipulatorUUID(user.getUUID());
                 WorldCapProvider.getWorldCap((ServerWorld) user.level).setTimeData(WorldCap.TimeData.ACCELERATION);
+                world.playSound(null, standEntity.blockPosition(), InitSounds.MIH_TIME_ACCELERATION.get(), SoundCategory.VOICE, 1, 1);
+                world.playSound(null, standEntity.blockPosition(), InitSounds.MIH_TIME_ACCELERATION_USER.get(), SoundCategory.PLAYERS, 1, 1);
             }
         }
     }
@@ -48,7 +56,7 @@ public class TimeSystem extends StandEntityAction {
     public IFormattableTextComponent getTranslatedName(IStandPower power, String key) {
         LivingEntity user = power.getUser();
         if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && TimeUtil.equalUUID(user.getUUID())) {
-            return new TranslationTextComponent(key + ".cast", new TranslationTextComponent("rotp_mih.time_system.clear", TimeUtil.getCalculatedPhase(WorldCapProvider.getClientTimeAccelPhase())));
+            return new TranslationTextComponent(key + ".cast", new TranslationTextComponent("rotp_mih.time_system.clear"));
         } else {
             return new TranslationTextComponent(key + ".cast", new TranslationTextComponent("rotp_mih.time_system.acceleration"));
         }
@@ -59,20 +67,32 @@ public class TimeSystem extends StandEntityAction {
         return WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && TimeUtil.equalUUID(power.getUser().getUUID());
     }
 
-    private final LazySupplier<ResourceLocation> accelerationTex =
-            new LazySupplier<>(() -> makeIconVariant(this, ".acceleration"));
-    private final LazySupplier<ResourceLocation> clearTex =
-            new LazySupplier<>(() -> makeIconVariant(this, ".clear"));
+    private final LazySupplier<ResourceLocation> oldAccelerationTex =
+            new LazySupplier<>(() -> makeIcon(this, true,".acceleration"));
+    private final LazySupplier<ResourceLocation> oldClearTex =
+            new LazySupplier<>(() -> makeIcon(this,  true, ".clear"));
+    private final LazySupplier<ResourceLocation> newAccelerationTex =
+            new LazySupplier<>(() -> makeIcon(this, false,".acceleration"));
+    private final LazySupplier<ResourceLocation> newClearTex =
+            new LazySupplier<>(() -> makeIcon(this,  false, ".clear"));
 
     @Override
     public ResourceLocation getIconTexture(@Nullable IStandPower power) {
-        if (power != null) {
-            if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && TimeUtil.equalUUID(power.getUser().getUUID())) {
-                return clearTex.get();
-            } else {
-                return accelerationTex.get();
-            }
-        }
-        return accelerationTex.get();
+        boolean isNewIcons = MadeInHeavenConfig.CLIENT.isNewTSIconsEnabled.get();
+        boolean isTimeAccelerationActive = power != null &&
+                WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION &&
+                TimeUtil.equalUUID(power.getUser().getUUID());
+
+        LazySupplier<ResourceLocation> selectedTexture = isTimeAccelerationActive
+                ? (isNewIcons ? newClearTex : oldClearTex)
+                : (isNewIcons ? newAccelerationTex : oldAccelerationTex);
+
+        return selectedTexture.get();
+    }
+
+    private static ResourceLocation makeIcon(Action<?> action, boolean old, @Nullable String postfix) {
+        String folder = old ? "old/" : "new/";
+        String path = "time_system/" + folder + action.getRegistryName().getPath() + (postfix != null ? postfix : "");
+        return JojoModUtil.makeTextureLocation("action", action.getRegistryName().getNamespace(), path);
     }
 }
