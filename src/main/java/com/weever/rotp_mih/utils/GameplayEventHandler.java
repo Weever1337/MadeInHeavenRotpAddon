@@ -18,16 +18,19 @@ import com.weever.rotp_mih.entity.MadeInHeavenEntity;
 import com.weever.rotp_mih.init.InitStands;
 import com.weever.rotp_mih.network.AddonPackets;
 import com.weever.rotp_mih.network.fromserver.ChangeMaxUpStepPacket;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -38,6 +41,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.github.standobyte.jojo.action.stand.TimeResume.userTimeStopInstance;
+import static com.weever.rotp_mih.utils.TimeUtil.multiplyProjectileSpeed;
 
 @Mod.EventBusSubscriber(modid = MadeInHeavenAddon.MOD_ID)
 public class GameplayEventHandler {
@@ -138,7 +142,7 @@ public class GameplayEventHandler {
             WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).setTimeAccelerationPhase(timeAccelPhase);
             ((ServerWorld) livingEntity.level).setDayTime(livingEntity.level.getDayTime() + multiplier);
             if (!livingEntity.getDeltaMovement().equals(Vector3d.ZERO)) {
-                power.consumeStamina(livingEntity.getSpeed() * 30);
+                power.consumeStamina(livingEntity.getSpeed() * 5);
             }
         } else {
             WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).setTimeManipulatorUUID(null);
@@ -218,5 +222,17 @@ public class GameplayEventHandler {
     @SuppressWarnings("unused")
     private static void useAction(Action<IStandPower> action, LivingEntity livingEntity, boolean sneak) {
         useAction(action, IStandPower.getStandPowerOptional(livingEntity).orElse(null), sneak);
+    }
+
+    @SubscribeEvent
+    public static void onEntityJoin(EntityJoinWorldEvent event) {
+        Entity entity = event.getEntity();
+        if (!entity.level.isClientSide()) {
+            if (entity instanceof ProjectileEntity) {
+                if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION) {
+                    multiplyProjectileSpeed((ProjectileEntity) entity, TimeUtil.getCalculatedPhase(WorldCapProvider.getClientTimeAccelPhase()));
+                }
+            }
+        }
     }
 }

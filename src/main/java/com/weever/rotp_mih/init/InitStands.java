@@ -123,4 +123,6 @@ public class InitStands {
                             .summonSound(InitSounds.MIH_SUMMON)
                             .unsummonSound(InitSounds.MIH_UNSUMMON)
                     ).withDefaultStandAttributes();
+
+    public static final EntityStandRegistryObject<EntityStandType<StandStats>, StandEntityType<MadeInHeavenEntity>> MIH = MADE_IN_HEAVEN;
 }

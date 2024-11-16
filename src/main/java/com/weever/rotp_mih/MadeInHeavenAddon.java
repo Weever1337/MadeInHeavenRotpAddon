@@ -1,6 +1,5 @@
 package com.weever.rotp_mih;
 
-import com.weever.rotp_mih.addoncompat.OptionalDependencyHelper;
 import com.weever.rotp_mih.init.InitCapabilities;
 import com.weever.rotp_mih.init.InitEntities;
 import com.weever.rotp_mih.init.InitSounds;
@@ -34,6 +33,5 @@ public class MadeInHeavenAddon {
     private void onFMLCommonSetup(FMLCommonSetupEvent event) {
         AddonPackets.init();
         InitCapabilities.registerCapabilities();
-        OptionalDependencyHelper.init();
     }
 }

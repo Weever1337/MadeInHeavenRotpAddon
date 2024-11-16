@@ -13,7 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
 
-@Mixin({CropsBlock.class, SaplingBlock.class, SweetBerryBushBlock.class, LeavesBlock.class, CactusBlock.class, NetherWartBlock.class})
+@SuppressWarnings("crashing, idk how to fix")
+@Mixin({CropsBlock.class, SweetBerryBushBlock.class, LeavesBlock.class, CactusBlock.class, NetherWartBlock.class})
 public class GrowthMixin {
     @Inject(method = "randomTick", at = @At("HEAD"))
     public void onRandomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {

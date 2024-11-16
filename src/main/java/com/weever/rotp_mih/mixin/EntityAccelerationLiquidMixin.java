@@ -22,9 +22,9 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 @Mixin(Entity.class)
+@SuppressWarnings("unused, had a lot of crashes. Use a HamonUtilMixin")
 public class EntityAccelerationLiquidMixin {
-    @ModifyVariable(method = "move", ordinal = 1, index = 3, at = @At(
-            value = "INVOKE_ASSIGN", target = "Lnet/minecraft/entity/Entity;collide(Lnet/minecraft/util/math/vector/Vector3d;)Lnet/minecraft/util/math/vector/Vector3d;"))
+    @ModifyVariable(method = "move", ordinal = 1, index = 3, name = "vec32", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/entity/Entity;collide(Lnet/minecraft/util/math/vector/Vector3d;)Lnet/minecraft/util/math/vector/Vector3d;"))
     private Vector3d fluidCollision(Vector3d originalDisplacement) {
         if (!((Object) this instanceof LivingEntity)) {
             return originalDisplacement;
