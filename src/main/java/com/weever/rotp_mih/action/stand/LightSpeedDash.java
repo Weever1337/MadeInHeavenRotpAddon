@@ -6,39 +6,39 @@ import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
-import com.weever.rotp_mih.GameplayUtil;
-import com.weever.rotp_mih.entity.stand.stands.MihEntity;
-import com.weever.rotp_mih.init.InitSounds;
-import com.weever.rotp_mih.init.InitStands;
+import com.weever.rotp_mih.capability.world.WorldCapProvider;
+import com.weever.rotp_mih.utils.TimeUtil;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+
+import java.util.Objects;
+
 public class LightSpeedDash extends StandEntityAction {
     public LightSpeedDash(Builder builder) {
-        super(builder.holdType(3));
+        super(builder);
     }
 
+    boolean sprinting;
+
     @Override
-    protected ActionConditionResult checkStandConditions(StandEntity stand, IStandPower power, ActionTarget target) {
-        if (power.getStamina() > 50) return ActionConditionResult.POSITIVE;
-        return ActionConditionResult.NEGATIVE;
+    public ActionConditionResult checkConditions(LivingEntity user, IStandPower power, ActionTarget target) {
+        if (!TimeUtil.checkConditions(user, power, true))
+            return ActionConditionResult.createNegative(new TranslationTextComponent("rotp_mih.message.action_condition.cant_use_without_acceleration"));
+        if (WorldCapProvider.getClientTimeAccelPhase() < TimeUtil.GIVE_BUFFS) return ActionConditionResult.NEGATIVE;
+        if (power.getStamina() < 50) return ActionConditionResult.NEGATIVE;
+        return ActionConditionResult.POSITIVE;
     }
 
     @Override
     public void standTickPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
         LivingEntity user = userPower.getUser();
-        MihEntity MiH = (MihEntity) standEntity;
         if (!world.isClientSide()) {
-            if (!MiH.isValue(GameplayUtil.Values.ACCELERATION)) {
-                ((PlayerEntity) user).displayClientMessage(new TranslationTextComponent("rotp_mih.message.action_condition.cant_use_without_timeaccel"), true);
-                return;
-            }
+            sprinting = user.isSprinting();
             user.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 10, 99, false, false));
-            user.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 10, 4, false, false));
+            user.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 10, 14, false, false));
             user.addEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 10, 19, false, false));
         }
     }
@@ -50,19 +50,7 @@ public class LightSpeedDash extends StandEntityAction {
             user.removeEffect(Effects.MOVEMENT_SPEED);
             user.removeEffect(Effects.DAMAGE_RESISTANCE);
             user.removeEffect(Effects.DOLPHINS_GRACE);
-        }
-    }
-
-    @Override
-    public void onTaskSet(World world, StandEntity standEntity, IStandPower standPower, Phase phase, StandEntityTask task, int ticks) {
-        MihEntity MiH = (MihEntity) standEntity;
-        if (!world.isClientSide()) {
-            if (MiH.isValue(GameplayUtil.Values.ACCELERATION)) {
-                world.playSound(null,standEntity.blockPosition(), InitSounds.MIH_DASH.get(), SoundCategory.PLAYERS,1,1);
-                world.playSound(null,standEntity.blockPosition(), InitSounds.MIH_DASH_USER.get(), SoundCategory.PLAYERS,1,1);
-            } else {
-                standPower.setCooldownTimer(InitStands.MIH_DASH.get(), 0);
-            }
+            user.setSprinting(sprinting);
         }
     }
 }

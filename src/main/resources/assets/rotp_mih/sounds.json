@@ -1,55 +1,49 @@
 {
   "mih_summon": {
-    "sounds": [ "rotp_mih:new_sounds/mih_summon" ],
+    "sounds": [ "rotp_mih:mih_summon" ],
     "subtitle": "rotp_mih.subtitle.madeinheaven_summon"
   },
   "mih_unsummon": {
-    "sounds": [ "rotp_mih:new_sounds/mih_unsummon" ]
+    "sounds": [ "rotp_mih:mih_unsummon" ]
   },
   "mih_barrage": {
-    "sounds": [ "rotp_mih:new_sounds/mih_barrage", "rotp_mih:new_sounds/mih_barrage2" ]
+    "sounds": [ "rotp_mih:mih_barrage" ]
   },
   "mih_heavy_punch": {
-    "sounds": [ "rotp_mih:new_sounds/mih_heavy_punch" ]
+    "sounds": [ "rotp_mih:mih_heavy_punch" ]
   },
-  "mih_impale": {
-    "sounds": [ "rotp_mih:new_sounds/mih_impale" ]
+  "mih_chop": {
+    "sounds": [ "rotp_mih:mih_chop" ]
   },
   "mih_dash": {
-    "sounds": [ "rotp_mih:new_sounds/mih_dash" ]
-  },
-  "mih_two_steps": {
-    "sounds": [ "rotp_mih:new_sounds/mih_two_steps" ]
+    "sounds": [ "rotp_mih:mih_dash" ]
   },
   "mih_throat_slice": {
-    "sounds": [ "rotp_mih:new_sounds/mih_throat_slice" ]
+    "sounds": [ "rotp_mih:mih_throat_slice", "rotp_mih:mih_throat_slice_2" ]
   },
   "mih_time_acceleration": {
-    "sounds": [ "rotp_mih:new_sounds/mih_time_acceleration"]
-  },
-  "mih_universe_reset": {
-    "sounds": [ "rotp_mih:new_sounds/mih_universe_reset" ]
+    "sounds": [ "rotp_mih:mih_time_acceleration"]
   },
 
   "mih_summon_user": {
-    "sounds": [ "rotp_mih:new_sounds/stand_user/mih_summon_user" ]
+    "sounds": [ "rotp_mih:stand_user/mih_summon_user" ]
   },
   "mih_barrage_user": {
-    "sounds": [ "rotp_mih:new_sounds/stand_user/mih_barrage_user" ]
+    "sounds": [ "rotp_mih:stand_user/mih_barrage_user" ]
   },
   "mih_heavy_punch_user": {
-    "sounds": [ "rotp_mih:new_sounds/stand_user/mih_heavy_punch_user" ]
+    "sounds": [ "rotp_mih:stand_user/mih_heavy_punch_user" ]
   },
-  "mih_impale_user": {
-    "sounds": [ "rotp_mih:new_sounds/stand_user/mih_impale_user" ]
+  "mih_chop_user": {
+    "sounds": [ "rotp_mih:stand_user/mih_chop_user" ]
   },
   "mih_dash_user": {
-    "sounds": [ "rotp_mih:new_sounds/stand_user/mih_dash_user_1", "rotp_mih:new_sounds/stand_user/mih_dash_user_2" ]
+    "sounds": [ "rotp_mih:stand_user/mih_dash_user_1", "rotp_mih:stand_user/mih_dash_user_2" ]
   },
   "mih_time_acceleration_user": {
-    "sounds": [ "rotp_mih:new_sounds/stand_user/mih_time_acceleration_user" ]
+    "sounds": [ "rotp_mih:stand_user/mih_time_acceleration_user" ]
   },
   "mih_universe_reset_user": {
-    "sounds": [ "rotp_mih:new_sounds/stand_user/mih_universe_reset_user" ]
+    "sounds": [ "rotp_mih:stand_user/mih_universe_reset_user" ]
   }
 }

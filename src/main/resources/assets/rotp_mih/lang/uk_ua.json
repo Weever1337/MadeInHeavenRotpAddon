@@ -4,27 +4,20 @@
 
   "action.rotp_mih.mih_punch": "Удар",
   "action.rotp_mih.mih_heavy_punch": "Важкий удар",
-  "action.rotp_mih.mih_impale": "Проколоти",
+  "action.rotp_mih.mih_chop": "Проколоти",
   "action.rotp_mih.mih_barrage": "Шквал ударів",
 
-  "action.rotp_mih.mih_dash": "Світлова швидкість",
-  "action.rotp_mih.mih_two_steps": "Два кроки позаду",
-  "action.rotp_mih.mih_time_system": "Прискорення часу",
-  "action.rotp_mih.mih_universe_reset": "Скидання Всесвіту",
-  "action.rotp_mih.mih_throat_slice": "Скасувати дію",
+  "action.rotp_mih.mih_dash": "Світова швидкість",
+  "action.rotp_mih.mih_universe_reset": "Скинути Вселенню",
   "action.rotp_mih.mih_block": "Блокувати",
+  "action.rotp_mih.mih_throat_slice": "Горлова нарізка",
+  "action.rotp_mih.mih_time_system.cast": "Система часу: %s",
+
+  "rotp_mih.time_system.acceleration": "Прискорити",
+  "rotp_mih.time_system.clear": "Очистити",
 
   "rotp_mih.subtitle.madeinheaven_summon": "\"Made in Heaven!\"",
-  "effect.rotp_mih.bleeding": "Кровотеча",
-  "effect.rotp_mih.acceleration": "Прискорення",
-  "jojo.command.desc.cum": "Змусити гравця кінчити // Додано в аддон Made in Heaven",
 
-  "timeSystem.clear": "Очистити",
-  "timeSystem.acceleration": "Прискорення часу",
-  "timeSystem.slow": "Уповільнити час",
-  "rotp_mih.select_time_system": "Вибрати Маніпуляцію Часом",
-
-  "rotp_mih.message.action_condition.cant_use_without_timeaccel": "Ви не можете використовувати цю дію без прискорення часу",
-  "rotp_mih.message.action_condition.already_time_manipulation": "Хтось вже маніпулює часом",
-  "rotp_mih.message.action_condition.already_cleared": "Уже немає маніпуляцій із часом"
-}
+  "rotp_mih.message.action_condition.cant_use_without_acceleration": "Ви не можете використовувати цю дію без прискорення часу",
+  "rotp_mih.message.action_condition.already_time_manipulation": "Хтось вже маніпулює часом"
+  }

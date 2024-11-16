@@ -1,21 +1,23 @@
 buildscript {
     repositories {
         maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = 'https://maven.parchmentmc.org' }
         mavenCentral()
         maven { url = "https://repo.spongepowered.org/maven" }
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+        classpath 'org.parchmentmc:librarian:1.+'
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
 }
 
 apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-//version = "${addon_version}-" + new Date().format('yyMMdd') + "-a"
 version = release.toBoolean() ? "${addon_version}" : "${addon_version}-" + new Date().format('yyMMdd') + "-a"
 group = mod_group_id
 archivesBaseName = mod_name
@@ -24,6 +26,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
+    mappings channel: 'parchment', version: "2022.03.06-1.16.5"
     mappings channel: 'official', version: '1.16.5'
     runs {
         client {
@@ -89,9 +92,10 @@ repositories {
 
 dependencies {
     implementation 'org.jetbrains:annotations:24.0.0'
-    minecraft 'net.minecraftforge:forge:1.16.5-36.2.34'
+    minecraft 'net.minecraftforge:forge:1.16.5-36.2.42'
 	implementation fg.deobf("standobyte.jojo:JJBA-RipplesOfThePast:${main_mod_version}")
     implementation fg.deobf("curse.maven:hourglass-511172:3488913")
+    compileOnly fg.deobf("curse.maven:expandability-465066:3277762")
 }
 
 jar {
@@ -129,6 +133,10 @@ jar.finalizedBy('reobfJar')
 mixin {
     add sourceSets.main, "rotp_mih.mixins.refmap.json"
     config "rotp_mih.mixins.json"
+
+    debug.verbose = true
+    debug.export = true
+    dumpTargetOnFailure = true
 }
 
 publishing {

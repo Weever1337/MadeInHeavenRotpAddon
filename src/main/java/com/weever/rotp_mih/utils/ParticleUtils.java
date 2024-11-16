@@ -1,8 +1,6 @@
 package com.weever.rotp_mih.utils;
 
-import com.github.standobyte.jojo.util.mc.MCUtil;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -11,6 +9,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
+@SuppressWarnings("unused")
 public class ParticleUtils {
     public static void createBall(IParticleData particle, Vector3d vec, World world, int size, float speed) {
         if (!world.isClientSide())
@@ -106,19 +105,26 @@ public class ParticleUtils {
         createLine(particle, level, start, end, amount, Vector3d.ZERO);
     }
 
-    public static void createLineCommand(LivingEntity player, Vector3d start, Vector3d end, int amount) {
-        Vector3d delta = end.subtract(start);
-        Vector3d dir = delta.normalize();
-
-        for (int i = 0; i < amount; ++i) {
-            double progress = i * delta.length() / amount;
-            int x = (int) (start.x + dir.x * progress);
-            int y = (int) (start.y + dir.y * progress);
-            int z = (int) (start.z + dir.z * progress);
-
-            MCUtil.runCommand(player, "particle rotp_mih:spark " + x + " " + y + " " + z + " 0 0 0 0 1 0");
-//            level.addParticle(particle, start.x + dir.x * progress, start.y + dir.y * progress,
-//                    start.z + dir.z * progress, motion.x, motion.y, motion.z);
-        }
-    }
+//    public static void createNinjaHat(IParticleData particle, Vector3d center, World world, double radius, int loops, int particlesPerLoop, double height, double speed) {
+//        if (!world.isClientSide())
+//            return;
+//
+//        for (int loop = 0; loop < loops; loop++) {
+//            double loopProgress = (double) loop / (double) loops;
+//
+//            for (int i = 0; i < particlesPerLoop; i++) { // btw, nevernight - good luck. I think, you understand, what I mean with comments below (because I forgot to remove after a "lesson" with math) =)
+//                double angle = 2 * Math.PI * i / particlesPerLoop;
+//                double spiralRadius = radius * (1 - loopProgress);
+//                double x = center.x + spiralRadius * MathHelper.cos((float) angle);
+//                double z = center.z + spiralRadius * MathHelper.sin((float) angle);
+//                double y = center.y + height * loopProgress;
+//
+//                double motionX = -spiralRadius * MathHelper.cos((float) angle) * speed;
+//                double motionY = -height * loopProgress * speed;
+//                double motionZ = -spiralRadius * MathHelper.sin((float) angle) * speed;
+//
+//                world.addParticle(particle, x, y, z, motionX, motionY, motionZ);
+//            }
+//        }
+//    }
 }
