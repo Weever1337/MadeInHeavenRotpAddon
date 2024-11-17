@@ -2,6 +2,7 @@ package com.weever.rotp_mih.network;
 
 import com.github.standobyte.jojo.network.packets.IModPacketHandler;
 import com.weever.rotp_mih.MadeInHeavenAddon;
+import com.weever.rotp_mih.network.fromclient.SyncClientWorldCapPacket;
 import com.weever.rotp_mih.network.fromserver.ChangeMaxUpStepPacket;
 import com.weever.rotp_mih.network.fromserver.SyncWorldCapPacket;
 import net.minecraft.entity.Entity;
@@ -31,6 +32,7 @@ public class AddonPackets {
 
         registerMessage(channel, new ChangeMaxUpStepPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         registerMessage(channel, new SyncWorldCapPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        registerMessage(channel, new SyncClientWorldCapPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_SERVER));
     }
 
     private static <MSG> void registerMessage(SimpleChannel channel, IModPacketHandler<MSG> handler, Optional<NetworkDirection> networkDirection) {

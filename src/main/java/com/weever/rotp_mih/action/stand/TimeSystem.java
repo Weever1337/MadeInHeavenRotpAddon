@@ -9,15 +9,19 @@ import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.github.standobyte.jojo.util.general.LazySupplier;
 import com.github.standobyte.jojo.util.mod.JojoModUtil;
-import com.weever.rotp_mih.MadeInHeavenAddon;
 import com.weever.rotp_mih.MadeInHeavenConfig;
 import com.weever.rotp_mih.capability.world.WorldCap;
 import com.weever.rotp_mih.capability.world.WorldCapProvider;
+import com.weever.rotp_mih.client.ClientHandler;
 import com.weever.rotp_mih.init.InitSounds;
 import com.weever.rotp_mih.utils.TimeUtil;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.network.play.server.SStopSoundPacket;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -41,21 +45,33 @@ public class TimeSystem extends StandEntityAction {
     public void standPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
         if (!world.isClientSide()) {
             LivingEntity user = userPower.getUser();
-            if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && TimeUtil.equalUUID(user.getUUID())) {
-                WorldCapProvider.getWorldCap((ServerWorld) user.level).setTimeManipulatorUUID(null);
-            } else if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.NONE) {
-                WorldCapProvider.getWorldCap((ServerWorld) user.level).setTimeManipulatorUUID(user.getUUID());
+            if (ClientHandler.getClientTimeData() == WorldCap.TimeData.ACCELERATION && TimeUtil.equalUUID(user.getUUID())) {
+                WorldCapProvider.getWorldCap((ServerWorld) user.level).setTimeManipulatorUUID(null, false);
+                world.players().forEach(player -> {
+                    stopSound(player, InitSounds.MIH_TIME_ACCELERATION.get(), SoundCategory.VOICE);
+                    stopSound(player, InitSounds.MIH_TIME_ACCELERATION_USER.get(), SoundCategory.PLAYERS);
+                });
+            } else if (ClientHandler.getClientTimeData() == WorldCap.TimeData.NONE) {
+                boolean isTimeManipulatorPlayer = user instanceof PlayerEntity;
+                WorldCapProvider.getWorldCap((ServerWorld) user.level).setTimeManipulatorUUID(user.getUUID(), isTimeManipulatorPlayer);
                 WorldCapProvider.getWorldCap((ServerWorld) user.level).setTimeData(WorldCap.TimeData.ACCELERATION);
                 world.playSound(null, standEntity.blockPosition(), InitSounds.MIH_TIME_ACCELERATION.get(), SoundCategory.VOICE, 1, 1);
                 world.playSound(null, standEntity.blockPosition(), InitSounds.MIH_TIME_ACCELERATION_USER.get(), SoundCategory.PLAYERS, 1, 1);
+                userPower.setCooldownTimer(this, 10);
             }
+        }
+    }
+
+    private static void stopSound(PlayerEntity player, SoundEvent sound, SoundCategory soundCategory) {
+        if (player instanceof ServerPlayerEntity) {
+            ((ServerPlayerEntity) player).connection.send(new SStopSoundPacket(sound.getRegistryName(), soundCategory));
         }
     }
 
     @Override
     public IFormattableTextComponent getTranslatedName(IStandPower power, String key) {
         LivingEntity user = power.getUser();
-        if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && TimeUtil.equalUUID(user.getUUID())) {
+        if (ClientHandler.getClientTimeData() == WorldCap.TimeData.ACCELERATION && TimeUtil.equalUUID(user.getUUID())) {
             return new TranslationTextComponent(key + ".cast", new TranslationTextComponent("rotp_mih.time_system.clear"));
         } else {
             return new TranslationTextComponent(key + ".cast", new TranslationTextComponent("rotp_mih.time_system.acceleration"));
@@ -64,7 +80,7 @@ public class TimeSystem extends StandEntityAction {
 
     @Override
     public boolean greenSelection(IStandPower power, ActionConditionResult conditionCheck) {
-        return WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && TimeUtil.equalUUID(power.getUser().getUUID());
+        return ClientHandler.getClientTimeData() == WorldCap.TimeData.ACCELERATION && TimeUtil.equalUUID(power.getUser().getUUID());
     }
 
     private final LazySupplier<ResourceLocation> oldAccelerationTex =
@@ -80,7 +96,7 @@ public class TimeSystem extends StandEntityAction {
     public ResourceLocation getIconTexture(@Nullable IStandPower power) {
         boolean isNewIcons = MadeInHeavenConfig.CLIENT.isNewTSIconsEnabled.get();
         boolean isTimeAccelerationActive = power != null &&
-                WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION &&
+                ClientHandler.getClientTimeData() == WorldCap.TimeData.ACCELERATION &&
                 TimeUtil.equalUUID(power.getUser().getUUID());
 
         LazySupplier<ResourceLocation> selectedTexture = isTimeAccelerationActive

@@ -2,7 +2,7 @@ package com.weever.rotp_mih.network.fromserver;
 
 import com.github.standobyte.jojo.network.packets.IModPacketHandler;
 import com.weever.rotp_mih.capability.world.WorldCap;
-import com.weever.rotp_mih.capability.world.WorldCapProvider;
+import com.weever.rotp_mih.client.ClientHandler;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -61,6 +61,7 @@ public class SyncWorldCapPacket {
                         buffer.writeUUID(msg.timeManipulatorUUID);
                     }
                     buffer.writeEnum(msg.timeData);
+                    buffer.writeInt(msg.timeAccelPhase);
                     break;
             }
         }
@@ -93,16 +94,16 @@ public class SyncWorldCapPacket {
         public void handle(SyncWorldCapPacket msg, Supplier<NetworkEvent.Context> ctx) {
             switch (msg.field) {
                 case TIME_MANIPULATOR:
-                    WorldCapProvider.setClientTimeManipulatorUUID(msg.timeManipulatorUUID);
+                    ClientHandler.setClientTimeManipulatorUUID(msg.timeManipulatorUUID);
                     break;
                 case TIME_DATA:
-                    WorldCapProvider.setClientTimeData(msg.timeData);
+                    ClientHandler.setClientTimeData(msg.timeData);
                     break;
                 case TIME_ACCEL_PHASE:
-                    WorldCapProvider.setClientTimeAccelPhase(msg.timeAccelPhase);
+                    ClientHandler.setClientTimeAccelPhase(msg.timeAccelPhase);
                     break;
                 case BOTH:
-                    WorldCapProvider.setClientData(msg.timeManipulatorUUID, msg.timeData, msg.timeAccelPhase);
+                    ClientHandler.setClientData(msg.timeManipulatorUUID, msg.timeData, msg.timeAccelPhase);
                     break;
             }
         }

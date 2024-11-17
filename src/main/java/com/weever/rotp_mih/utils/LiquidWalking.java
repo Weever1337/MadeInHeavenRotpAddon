@@ -7,7 +7,7 @@ import com.github.standobyte.jojo.init.power.non_stand.hamon.ModHamonSkills;
 import com.github.standobyte.jojo.power.impl.nonstand.INonStandPower;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.weever.rotp_mih.capability.world.WorldCap;
-import com.weever.rotp_mih.capability.world.WorldCapProvider;
+import com.weever.rotp_mih.client.ClientHandler;
 import com.weever.rotp_mih.init.InitStands;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.fluid.FluidState;
@@ -32,7 +32,7 @@ public class LiquidWalking {
         }
 
         return IStandPower.getStandPowerOptional(entity).map(power -> {
-            if (TimeUtil.equalUUID(entity.getUUID()) && WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION && WorldCapProvider.getClientTimeAccelPhase() >= TimeUtil.GIVE_BUFFS) {
+            if (TimeUtil.equalUUID(entity.getUUID()) && ClientHandler.getClientTimeData() == WorldCap.TimeData.ACCELERATION && ClientHandler.getClientTimeAccelPhase() >= TimeUtil.GIVE_BUFFS) {
                 if (power.getType() == InitStands.MADE_IN_HEAVEN.getStandType() && power.isActive()) {
                     if (entity.isSprinting() && !entity.isCrouching()) {
                         if (power.getStamina() > 0) {

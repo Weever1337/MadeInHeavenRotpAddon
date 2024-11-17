@@ -1,0 +1,15 @@
+{
+  "homepage": "https://modrinth.com/mod/ripples-of-the-past-made-in-heaven-addon",
+  "1.16.5": {
+    "1.0": "Release",
+    "1.1.1": "A lot of changes, balances, reworks",
+    "1.1.2": "Added a new Passive to see in TimeStop and fixed bugs",
+    "1.2.0": "A BIG update, what reworked Time System, Universe Reset and etc.",
+    "1.2.1": "Fixed a bug with Liquid Walking",
+    "1.2.2": "Fixed asynchrony between client and server"
+  },
+  "promos": {
+    "1.16.5-latest": "1.2.2",
+    "1.16.5-recommended": "1.2.2"
+  }
+}

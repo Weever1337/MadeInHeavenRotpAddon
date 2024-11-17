@@ -6,15 +6,13 @@ import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
-import com.weever.rotp_mih.capability.world.WorldCapProvider;
+import com.weever.rotp_mih.client.ClientHandler;
 import com.weever.rotp_mih.utils.TimeUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-
-import java.util.Objects;
 
 public class LightSpeedDash extends StandEntityAction {
     public LightSpeedDash(Builder builder) {
@@ -27,7 +25,7 @@ public class LightSpeedDash extends StandEntityAction {
     public ActionConditionResult checkConditions(LivingEntity user, IStandPower power, ActionTarget target) {
         if (!TimeUtil.checkConditions(user, power, true))
             return ActionConditionResult.createNegative(new TranslationTextComponent("rotp_mih.message.action_condition.cant_use_without_acceleration"));
-        if (WorldCapProvider.getClientTimeAccelPhase() < TimeUtil.GIVE_BUFFS) return ActionConditionResult.NEGATIVE;
+        if (ClientHandler.getClientTimeAccelPhase() < TimeUtil.GIVE_BUFFS) return ActionConditionResult.NEGATIVE;
         if (power.getStamina() < 50) return ActionConditionResult.NEGATIVE;
         return ActionConditionResult.POSITIVE;
     }

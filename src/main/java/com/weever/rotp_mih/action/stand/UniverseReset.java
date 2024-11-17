@@ -33,6 +33,7 @@ public class UniverseReset extends StandEntityAction {
             if(user != null){
                 world.getEntitiesOfClass(LivingEntity.class, user.getBoundingBox().inflate(16 * 12), EntityPredicates.ENTITY_STILL_ALIVE).forEach(
                         livingEntity -> {
+                            MCUtil.runCommand(livingEntity, "particle minecraft:ambient_entity_effect "+user.getX()+" "+user.getY() + 1 +" "+user.getZ()+" .5 .5 .5 1 30");
                             if (livingEntity == user || livingEntity == standEntity) {
                                 livingEntity.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 180 * 20, 4, false, false, true));
                                 userPower.setCooldownTimer(InitStands.MIH_TIME_SYSTEM.get(), 20 * 60);

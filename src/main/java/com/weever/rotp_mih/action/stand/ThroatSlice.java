@@ -7,7 +7,7 @@ import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.init.ModStatusEffects;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
-import com.weever.rotp_mih.capability.world.WorldCapProvider;
+import com.weever.rotp_mih.client.ClientHandler;
 import com.weever.rotp_mih.init.InitSounds;
 import com.weever.rotp_mih.utils.TimeUtil;
 import net.minecraft.entity.LivingEntity;
@@ -38,7 +38,7 @@ public class ThroatSlice extends StandEntityAction {
     public ActionConditionResult checkConditions(LivingEntity user, IStandPower power, ActionTarget target) {
         if (!TimeUtil.checkConditions(user, power, true))
             return ActionConditionResult.createNegative(new TranslationTextComponent("rotp_mih.message.action_condition.cant_use_without_acceleration"));
-        if (WorldCapProvider.getClientTimeAccelPhase() < TimeUtil.GIVE_BUFFS) return ActionConditionResult.NEGATIVE;
+        if (ClientHandler.getClientTimeAccelPhase() < TimeUtil.GIVE_BUFFS) return ActionConditionResult.NEGATIVE;
         if (power.getStamina() < 50) return ActionConditionResult.NEGATIVE;
         return ActionConditionResult.POSITIVE;
     }

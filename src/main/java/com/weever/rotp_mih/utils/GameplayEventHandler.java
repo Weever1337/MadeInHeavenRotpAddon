@@ -2,6 +2,7 @@ package com.weever.rotp_mih.utils;
 
 import com.github.standobyte.jojo.action.Action;
 import com.github.standobyte.jojo.action.ActionTarget;
+import com.github.standobyte.jojo.action.stand.StandAction;
 import com.github.standobyte.jojo.action.stand.TimeStop;
 import com.github.standobyte.jojo.capability.entity.LivingUtilCapProvider;
 import com.github.standobyte.jojo.capability.world.TimeStopHandler;
@@ -14,6 +15,7 @@ import com.weever.rotp_mih.MadeInHeavenAddon;
 import com.weever.rotp_mih.capability.world.WorldCap;
 import com.weever.rotp_mih.capability.world.WorldCap.TimeData;
 import com.weever.rotp_mih.capability.world.WorldCapProvider;
+import com.weever.rotp_mih.client.ClientHandler;
 import com.weever.rotp_mih.entity.MadeInHeavenEntity;
 import com.weever.rotp_mih.init.InitStands;
 import com.weever.rotp_mih.network.AddonPackets;
@@ -23,6 +25,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.util.math.vector.Vector3d;
@@ -31,7 +34,9 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -56,13 +61,13 @@ public class GameplayEventHandler {
         LivingEntity livingEntity = event.getEntityLiving();
         if (livingEntity != null && !livingEntity.level.isClientSide()) {
             if (TimeUtil.equalUUID(livingEntity.getUUID())) {
-                if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION) {
+                if (ClientHandler.getClientTimeData() == WorldCap.TimeData.ACCELERATION) {
                     if (IStandPower.getStandPowerOptional(livingEntity).isPresent() && IStandPower.getStandPowerOptional(livingEntity).map(p -> p.getType() == InitStands.MADE_IN_HEAVEN.getStandType()).orElse(false)) {
                         if (TimeStopHandler.isTimeStopped(livingEntity.level, livingEntity.blockPosition())) {
                             return;
                         }
 
-                        int phase = WorldCapProvider.getClientTimeAccelPhase();
+                        int phase = ClientHandler.getClientTimeAccelPhase();
                         IStandPower power = IStandPower.getStandPowerOptional(livingEntity).orElse(null);
                         accelerateTime(livingEntity, phase, power);
                         boostOnAcceleration(livingEntity, (StandEntity) power.getStandManifestation(), phase);
@@ -135,7 +140,7 @@ public class GameplayEventHandler {
                 } else {
                     useAction(InitStands.MIH_UNIVERSE_RESET.get(), power);
                     removeBoost(livingEntity);
-                    WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).setTimeManipulatorUUID(null);
+                    WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).setTimeManipulatorUUID(null, false);
                 }
             }
             WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).setTickCounter(WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).getTickCounter()+1);
@@ -145,16 +150,16 @@ public class GameplayEventHandler {
                 power.consumeStamina(livingEntity.getSpeed() * 5);
             }
         } else {
-            WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).setTimeManipulatorUUID(null);
+            WorldCapProvider.getWorldCap((ServerWorld) livingEntity.level).setTimeManipulatorUUID(null, false);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onWorldTick(TickEvent.WorldTickEvent event) {
         if (!event.world.isClientSide() && event.world.dimension() == World.OVERWORLD) {
-            if (event.phase == TickEvent.Phase.START) {
+//            if (event.phase == TickEvent.Phase.START) {
                 WorldCapProvider.getWorldCap((ServerWorld) event.world).tick();
-            }
+//            }
         }
     }
 
@@ -175,13 +180,13 @@ public class GameplayEventHandler {
             });
 
             if (timeStop.get() == null) return;
-            if (WorldCapProvider.getClientTimeData() == TimeData.ACCELERATION) {
+            if (ClientHandler.getClientTimeData() == TimeData.ACCELERATION) {
                 if (TimeStopHandler.isTimeStopped(livingEntity.level, livingEntity.blockPosition())) {
                     entityTickCounters.putIfAbsent(livingEntity, 0);
                     int tick = entityTickCounters.get(livingEntity) + 1;
                     entityTickCounters.put(livingEntity, tick);
 
-                    if (tick >= 2 * timeStop.get().getMaxTimeStopTicks(power) / TimeUtil.getCalculatedPhase(WorldCapProvider.getClientTimeAccelPhase())) {
+                    if (tick >= 2 * timeStop.get().getMaxTimeStopTicks(power) / TimeUtil.getCalculatedPhase(ClientHandler.getClientTimeAccelPhase())) {
                         userTimeStopInstance(livingEntity.level, livingEntity, instance -> {
                             if (instance != null) {
                                 instance.setTicksLeft(!instance.wereTicksManuallySet() && instance.getTicksLeft() > TICKS_FIRST_CLICK ? TICKS_FIRST_CLICK : 0);
@@ -198,8 +203,13 @@ public class GameplayEventHandler {
         if (power == null || power.getType() == null || action == null) return;
         LivingEntity user = power.getUser();
         AtomicBoolean haveAction = new AtomicBoolean(false);
+
+        if (!action.isUnlocked(power) && power.getResolveLevel() == 4) { // Works only with Universe Reset
+            power.unlockAction((StandAction) action);
+        }
+
         power.getAllUnlockedActions().forEach(a -> {
-            if (a == action && a.getCooldownTechnical(power) > 0) {
+            if (a == action) {
                 haveAction.set(true);
             }
         });
@@ -229,9 +239,29 @@ public class GameplayEventHandler {
         Entity entity = event.getEntity();
         if (!entity.level.isClientSide()) {
             if (entity instanceof ProjectileEntity) {
-                if (WorldCapProvider.getClientTimeData() == WorldCap.TimeData.ACCELERATION) {
-                    multiplyProjectileSpeed((ProjectileEntity) entity, TimeUtil.getCalculatedPhase(WorldCapProvider.getClientTimeAccelPhase()));
+                if (ClientHandler.getClientTimeData() == WorldCap.TimeData.ACCELERATION) {
+                    multiplyProjectileSpeed((ProjectileEntity) entity, TimeUtil.getCalculatedPhase(ClientHandler.getClientTimeAccelPhase()));
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
+        removeManipulationFrom(event.getEntityLiving());
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onLivingDeath(LivingDeathEvent event) {
+        removeManipulationFrom(event.getEntityLiving());
+    }
+
+    private static void removeManipulationFrom(LivingEntity entity) {
+        if (entity == null) return;
+
+        if (!entity.level.isClientSide()) {
+            if (TimeUtil.equalUUID(entity.getUUID())) {
+                WorldCapProvider.getWorldCap((ServerWorld) entity.level).setTimeManipulatorUUID(null, false);
             }
         }
     }

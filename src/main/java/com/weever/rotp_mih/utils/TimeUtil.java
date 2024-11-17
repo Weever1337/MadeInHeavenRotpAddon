@@ -2,7 +2,7 @@ package com.weever.rotp_mih.utils;
 
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.weever.rotp_mih.capability.world.WorldCap.TimeData;
-import com.weever.rotp_mih.capability.world.WorldCapProvider;
+import com.weever.rotp_mih.client.ClientHandler;
 import com.weever.rotp_mih.init.InitStands;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -48,8 +48,8 @@ public class TimeUtil {
     }
 
     public static boolean checkConditions(LivingEntity user, IStandPower power, boolean timeSystem) {
-        boolean checkForTimeData = WorldCapProvider.getClientTimeData() == TimeData.NONE && !timeSystem;
-        if (WorldCapProvider.getClientTimeData() != TimeData.NONE && equalUUID(user.getUUID())) checkForTimeData = true;
+        boolean checkForTimeData = ClientHandler.getClientTimeData() == TimeData.NONE && !timeSystem;
+        if (ClientHandler.getClientTimeData() != TimeData.NONE && equalUUID(user.getUUID())) checkForTimeData = true;
         return power.getType() == InitStands.MADE_IN_HEAVEN.getStandType() &&
                 user.level.dimension() == World.OVERWORLD &&
                 user.level.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT)
@@ -62,6 +62,6 @@ public class TimeUtil {
     }
 
     public static boolean equalUUID(UUID uuid) {
-        return equalUUID(WorldCapProvider.getClientTimeManipulatorUUID(), uuid);
+        return equalUUID(ClientHandler.getClientTimeManipulatorUUID(), uuid);
     }
 }
