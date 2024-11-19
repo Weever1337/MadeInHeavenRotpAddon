@@ -2,6 +2,7 @@ package com.weever.rotp_mih.mixin;
 
 import com.weever.rotp_mih.capability.world.WorldCap;
 import com.weever.rotp_mih.client.ClientHandler;
+import com.weever.rotp_mih.utils.TimeUtil;
 import net.minecraft.block.*;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.util.math.BlockPos;
@@ -19,7 +20,7 @@ public class GrowthMixin {
     @Inject(method = "randomTick", at = @At("HEAD"))
     public void onRandomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         if (!world.isAreaLoaded(pos, 1)) return;
-        if (ClientHandler.getClientTimeData() == WorldCap.TimeData.ACCELERATION) {
+        if (TimeUtil.getTimeData(world) == WorldCap.TimeData.ACCELERATION) {
             if (world.getRawBrightness(pos, 0) >= 9) {
                 if (state.getBlock() instanceof CropsBlock) {
                     CropsBlock crops = (CropsBlock) state.getBlock();

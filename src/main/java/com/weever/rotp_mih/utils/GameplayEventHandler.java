@@ -60,14 +60,14 @@ public class GameplayEventHandler {
     public static void onAccelerate(LivingUpdateEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
         if (livingEntity != null && !livingEntity.level.isClientSide()) {
-            if (TimeUtil.equalUUID(livingEntity.getUUID())) {
-                if (ClientHandler.getClientTimeData() == WorldCap.TimeData.ACCELERATION) {
+            if (TimeUtil.customEqualUUID(livingEntity.getUUID(), livingEntity.level)) {
+                if (TimeUtil.getTimeData(livingEntity.level) == WorldCap.TimeData.ACCELERATION) {
                     if (IStandPower.getStandPowerOptional(livingEntity).isPresent() && IStandPower.getStandPowerOptional(livingEntity).map(p -> p.getType() == InitStands.MADE_IN_HEAVEN.getStandType()).orElse(false)) {
                         if (TimeStopHandler.isTimeStopped(livingEntity.level, livingEntity.blockPosition())) {
                             return;
                         }
 
-                        int phase = ClientHandler.getClientTimeAccelPhase();
+                        int phase = TimeUtil.getTimeAccelPhase(livingEntity.level);
                         IStandPower power = IStandPower.getStandPowerOptional(livingEntity).orElse(null);
                         accelerateTime(livingEntity, phase, power);
                         boostOnAcceleration(livingEntity, (StandEntity) power.getStandManifestation(), phase);
@@ -157,9 +157,7 @@ public class GameplayEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onWorldTick(TickEvent.WorldTickEvent event) {
         if (!event.world.isClientSide() && event.world.dimension() == World.OVERWORLD) {
-//            if (event.phase == TickEvent.Phase.START) {
-                WorldCapProvider.getWorldCap((ServerWorld) event.world).tick();
-//            }
+            WorldCapProvider.getWorldCap((ServerWorld) event.world).tick();
         }
     }
 
@@ -169,7 +167,7 @@ public class GameplayEventHandler {
         if (livingEntity == null || livingEntity.level.isClientSide()) return;
 
         IStandPower.getStandPowerOptional(livingEntity).ifPresent(power -> {
-            if (power.getType() == null && TimeUtil.equalUUID(livingEntity.getUUID())) return;
+            if (power.getType() == null && TimeUtil.customEqualUUID(livingEntity.getUUID(), livingEntity.level)) return;
 
             AtomicReference<TimeStop> timeStop = new AtomicReference<>();
 
@@ -180,13 +178,13 @@ public class GameplayEventHandler {
             });
 
             if (timeStop.get() == null) return;
-            if (ClientHandler.getClientTimeData() == TimeData.ACCELERATION) {
+            if (TimeUtil.getTimeData(livingEntity.level) == TimeData.ACCELERATION) {
                 if (TimeStopHandler.isTimeStopped(livingEntity.level, livingEntity.blockPosition())) {
                     entityTickCounters.putIfAbsent(livingEntity, 0);
                     int tick = entityTickCounters.get(livingEntity) + 1;
                     entityTickCounters.put(livingEntity, tick);
 
-                    if (tick >= 2 * timeStop.get().getMaxTimeStopTicks(power) / TimeUtil.getCalculatedPhase(ClientHandler.getClientTimeAccelPhase())) {
+                    if (tick >= 2 * timeStop.get().getMaxTimeStopTicks(power) / TimeUtil.getCalculatedPhase(TimeUtil.getTimeAccelPhase(livingEntity.level))) {
                         userTimeStopInstance(livingEntity.level, livingEntity, instance -> {
                             if (instance != null) {
                                 instance.setTicksLeft(!instance.wereTicksManuallySet() && instance.getTicksLeft() > TICKS_FIRST_CLICK ? TICKS_FIRST_CLICK : 0);
@@ -239,8 +237,8 @@ public class GameplayEventHandler {
         Entity entity = event.getEntity();
         if (!entity.level.isClientSide()) {
             if (entity instanceof ProjectileEntity) {
-                if (ClientHandler.getClientTimeData() == WorldCap.TimeData.ACCELERATION) {
-                    multiplyProjectileSpeed((ProjectileEntity) entity, TimeUtil.getCalculatedPhase(ClientHandler.getClientTimeAccelPhase()));
+                if (TimeUtil.getTimeData(entity.level) == WorldCap.TimeData.ACCELERATION) {
+                    multiplyProjectileSpeed((ProjectileEntity) entity, TimeUtil.getCalculatedPhase(TimeUtil.getTimeAccelPhase(entity.level)));
                 }
             }
         }
@@ -260,7 +258,7 @@ public class GameplayEventHandler {
         if (entity == null) return;
 
         if (!entity.level.isClientSide()) {
-            if (TimeUtil.equalUUID(entity.getUUID())) {
+            if (TimeUtil.customEqualUUID(entity.getUUID(), entity.level)) {
                 WorldCapProvider.getWorldCap((ServerWorld) entity.level).setTimeManipulatorUUID(null, false);
             }
         }

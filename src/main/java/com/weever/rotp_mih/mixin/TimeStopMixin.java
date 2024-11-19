@@ -16,13 +16,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class TimeStopMixin {
     @Inject(method = "canUserSeeInStoppedTime(Lnet/minecraft/entity/LivingEntity;Lcom/github/standobyte/jojo/power/impl/stand/IStandPower;)Z", at = @At("RETURN"), cancellable = true)
     private void onCanUserSeeInStoppedTime(LivingEntity user, IStandPower power, CallbackInfoReturnable<Boolean> cir) {
-        if (TimeUtil.equalUUID(user.getUUID()) && power.getType() == InitStands.MADE_IN_HEAVEN.getStandType()) {
-            if (ClientHandler.getClientTimeData() != WorldCap.TimeData.ACCELERATION) {
-                cir.setReturnValue(false);
-            } else {
-                if (ClientHandler.getClientTimeAccelPhase() < TimeUtil.GIVE_BUFFS) {
-                    cir.setReturnValue(false);
-                } else {
+        if (TimeUtil.customEqualUUID(user.getUUID(), null) && power.getType() == InitStands.MADE_IN_HEAVEN.getStandType()) {
+            if (TimeUtil.getTimeData(user.level) == WorldCap.TimeData.ACCELERATION) {
+                if (TimeUtil.getTimeAccelPhase(user.level) > TimeUtil.GIVE_BUFFS) {
                     cir.setReturnValue(true);
                 }
             }

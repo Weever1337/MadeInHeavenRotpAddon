@@ -32,7 +32,7 @@ public class LiquidWalking {
         }
 
         return IStandPower.getStandPowerOptional(entity).map(power -> {
-            if (TimeUtil.equalUUID(entity.getUUID()) && ClientHandler.getClientTimeData() == WorldCap.TimeData.ACCELERATION && ClientHandler.getClientTimeAccelPhase() >= TimeUtil.GIVE_BUFFS) {
+            if (TimeUtil.customEqualUUID(entity.getUUID(), entity.level) && TimeUtil.getTimeData(entity.level) == WorldCap.TimeData.ACCELERATION && TimeUtil.getTimeAccelPhase(entity.level) >= TimeUtil.GIVE_BUFFS) {
                 if (power.getType() == InitStands.MADE_IN_HEAVEN.getStandType() && power.isActive()) {
                     if (entity.isSprinting() && !entity.isCrouching()) {
                         if (power.getStamina() > 0) {

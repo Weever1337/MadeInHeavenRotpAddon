@@ -45,18 +45,23 @@ public class TimeSystem extends StandEntityAction {
     public void standPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
         if (!world.isClientSide()) {
             LivingEntity user = userPower.getUser();
-            if (ClientHandler.getClientTimeData() == WorldCap.TimeData.ACCELERATION && TimeUtil.equalUUID(user.getUUID())) {
-                WorldCapProvider.getWorldCap((ServerWorld) user.level).setTimeManipulatorUUID(null, false);
+            WorldCap worldCap = WorldCapProvider.getWorldCap((ServerWorld) user.level);
+            if (worldCap.getTimeData() == WorldCap.TimeData.ACCELERATION && TimeUtil.customEqualUUID(user.getUUID(), world)) {
+                worldCap.setTimeManipulatorUUID(null, false);
+
                 world.players().forEach(player -> {
                     stopSound(player, InitSounds.MIH_TIME_ACCELERATION.get(), SoundCategory.VOICE);
                     stopSound(player, InitSounds.MIH_TIME_ACCELERATION_USER.get(), SoundCategory.PLAYERS);
                 });
-            } else if (ClientHandler.getClientTimeData() == WorldCap.TimeData.NONE) {
+            } else if (worldCap.getTimeData() == WorldCap.TimeData.NONE) {
                 boolean isTimeManipulatorPlayer = user instanceof PlayerEntity;
-                WorldCapProvider.getWorldCap((ServerWorld) user.level).setTimeManipulatorUUID(user.getUUID(), isTimeManipulatorPlayer);
-                WorldCapProvider.getWorldCap((ServerWorld) user.level).setTimeData(WorldCap.TimeData.ACCELERATION);
+
+                worldCap.setTimeManipulatorUUID(user.getUUID(), isTimeManipulatorPlayer);
+                worldCap.setTimeData(WorldCap.TimeData.ACCELERATION);
+
                 world.playSound(null, standEntity.blockPosition(), InitSounds.MIH_TIME_ACCELERATION.get(), SoundCategory.VOICE, 1, 1);
                 world.playSound(null, standEntity.blockPosition(), InitSounds.MIH_TIME_ACCELERATION_USER.get(), SoundCategory.PLAYERS, 1, 1);
+
                 userPower.setCooldownTimer(this, 10);
             }
         }
@@ -71,7 +76,7 @@ public class TimeSystem extends StandEntityAction {
     @Override
     public IFormattableTextComponent getTranslatedName(IStandPower power, String key) {
         LivingEntity user = power.getUser();
-        if (ClientHandler.getClientTimeData() == WorldCap.TimeData.ACCELERATION && TimeUtil.equalUUID(user.getUUID())) {
+        if (TimeUtil.getTimeData(user.level) == WorldCap.TimeData.ACCELERATION && TimeUtil.customEqualUUID(user.getUUID(), null)) {
             return new TranslationTextComponent(key + ".cast", new TranslationTextComponent("rotp_mih.time_system.clear"));
         } else {
             return new TranslationTextComponent(key + ".cast", new TranslationTextComponent("rotp_mih.time_system.acceleration"));
@@ -80,7 +85,7 @@ public class TimeSystem extends StandEntityAction {
 
     @Override
     public boolean greenSelection(IStandPower power, ActionConditionResult conditionCheck) {
-        return ClientHandler.getClientTimeData() == WorldCap.TimeData.ACCELERATION && TimeUtil.equalUUID(power.getUser().getUUID());
+        return TimeUtil.getTimeData(power.getUser().level) == WorldCap.TimeData.ACCELERATION && TimeUtil.customEqualUUID(power.getUser().getUUID(), null);
     }
 
     private final LazySupplier<ResourceLocation> oldAccelerationTex =
@@ -96,8 +101,8 @@ public class TimeSystem extends StandEntityAction {
     public ResourceLocation getIconTexture(@Nullable IStandPower power) {
         boolean isNewIcons = MadeInHeavenConfig.CLIENT.isNewTSIconsEnabled.get();
         boolean isTimeAccelerationActive = power != null &&
-                ClientHandler.getClientTimeData() == WorldCap.TimeData.ACCELERATION &&
-                TimeUtil.equalUUID(power.getUser().getUUID());
+                TimeUtil.getTimeData(power.getUser().level) == WorldCap.TimeData.ACCELERATION &&
+                TimeUtil.customEqualUUID(power.getUser().getUUID(), null);
 
         LazySupplier<ResourceLocation> selectedTexture = isTimeAccelerationActive
                 ? (isNewIcons ? newClearTex : oldClearTex)

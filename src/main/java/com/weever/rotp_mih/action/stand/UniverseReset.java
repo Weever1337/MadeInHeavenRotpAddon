@@ -41,6 +41,9 @@ public class UniverseReset extends StandEntityAction {
                                 IStandPower.getStandPowerOptional(livingEntity).ifPresent(power -> {
                                     power.getAllUnlockedActions().forEach(ability -> power.setCooldownTimer(ability, 20 * 60));
                                     power.setStamina(0);
+                                    if (!power.isActive()) {
+                                        power.toggleSummon();
+                                    }
                                 });
                                 livingEntity.addEffect(new EffectInstance(Effects.DIG_SLOWDOWN, 20 * 60, 10, false, false, true));
                             }

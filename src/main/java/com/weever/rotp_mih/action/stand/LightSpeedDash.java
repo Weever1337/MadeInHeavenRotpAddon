@@ -25,7 +25,7 @@ public class LightSpeedDash extends StandEntityAction {
     public ActionConditionResult checkConditions(LivingEntity user, IStandPower power, ActionTarget target) {
         if (!TimeUtil.checkConditions(user, power, true))
             return ActionConditionResult.createNegative(new TranslationTextComponent("rotp_mih.message.action_condition.cant_use_without_acceleration"));
-        if (ClientHandler.getClientTimeAccelPhase() < TimeUtil.GIVE_BUFFS) return ActionConditionResult.NEGATIVE;
+        if (TimeUtil.getTimeAccelPhase(user.level) < TimeUtil.GIVE_BUFFS) return ActionConditionResult.NEGATIVE;
         if (power.getStamina() < 50) return ActionConditionResult.NEGATIVE;
         return ActionConditionResult.POSITIVE;
     }

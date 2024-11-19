@@ -1,13 +1,17 @@
 package com.weever.rotp_mih.utils;
 
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
+import com.weever.rotp_mih.capability.world.WorldCap;
 import com.weever.rotp_mih.capability.world.WorldCap.TimeData;
+import com.weever.rotp_mih.capability.world.WorldCapProvider;
 import com.weever.rotp_mih.client.ClientHandler;
 import com.weever.rotp_mih.init.InitStands;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -48,8 +52,8 @@ public class TimeUtil {
     }
 
     public static boolean checkConditions(LivingEntity user, IStandPower power, boolean timeSystem) {
-        boolean checkForTimeData = ClientHandler.getClientTimeData() == TimeData.NONE && !timeSystem;
-        if (ClientHandler.getClientTimeData() != TimeData.NONE && equalUUID(user.getUUID())) checkForTimeData = true;
+        boolean checkForTimeData = TimeUtil.getTimeData(user.level) == TimeData.NONE && !timeSystem;
+        if (TimeUtil.getTimeData(user.level) != TimeData.NONE && customEqualUUID(user.getUUID(), user.level)) checkForTimeData = true;
         return power.getType() == InitStands.MADE_IN_HEAVEN.getStandType() &&
                 user.level.dimension() == World.OVERWORLD &&
                 user.level.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT)
@@ -61,7 +65,51 @@ public class TimeUtil {
         return (oneUuid.equals(twoUuid) || oneUuid == twoUuid);
     }
 
-    public static boolean equalUUID(UUID uuid) {
-        return equalUUID(ClientHandler.getClientTimeManipulatorUUID(), uuid);
+    public static boolean customEqualUUID(UUID uuid, @Nullable World world) {
+        if (world == null) {
+            return equalUUID(ClientHandler.getClientTimeManipulatorUUID(), uuid);
+        } else {
+            if (!world.isClientSide()) {
+                return equalUUID(WorldCapProvider.getWorldCap((ServerWorld) world).getTimeManipulatorUUID(), uuid);
+            } else {
+                return equalUUID(ClientHandler.getClientTimeManipulatorUUID(), uuid);
+            }
+        }
+    }
+
+    public static TimeData getTimeData(@Nullable World world) {
+        if (world == null) {
+            return ClientHandler.getClientTimeData();
+        } else {
+            if (!world.isClientSide()) {
+                return WorldCapProvider.getWorldCap((ServerWorld) world).getTimeData();
+            } else {
+                return ClientHandler.getClientTimeData();
+            }
+        }
+    }
+
+    public static UUID getTimeManipulator(@Nullable World world) {
+        if (world == null) {
+            return ClientHandler.getClientTimeManipulatorUUID();
+        } else {
+            if (!world.isClientSide()) {
+                return WorldCapProvider.getWorldCap((ServerWorld) world).getTimeManipulatorUUID();
+            } else {
+                return ClientHandler.getClientTimeManipulatorUUID();
+            }
+        }
+    }
+
+    public static int getTimeAccelPhase(@Nullable World world) {
+        if (world == null) {
+            return ClientHandler.getClientTimeAccelPhase();
+        } else {
+            if (!world.isClientSide()) {
+                return WorldCapProvider.getWorldCap((ServerWorld) world).getTimeAccelerationPhase();
+            } else {
+                return ClientHandler.getClientTimeAccelPhase();
+            }
+        }
     }
 }

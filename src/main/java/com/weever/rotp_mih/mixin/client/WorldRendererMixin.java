@@ -13,17 +13,17 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public class WorldRendererMixin {
     @ModifyVariable(method = "renderSnowAndRain", at = @At("HEAD"), argsOnly = true, ordinal = 0)
     private float jojoTsWeatherChangePartialTick(float partialTick) {
-        if (ClientHandler.getClientTimeData() == WorldCap.TimeData.ACCELERATION) {
-            return partialTick * TimeUtil.getCalculatedPhase(ClientHandler.getClientTimeAccelPhase());
+        if (TimeUtil.getTimeData(null) == WorldCap.TimeData.ACCELERATION) {
+            return partialTick * TimeUtil.getCalculatedPhase(TimeUtil.getTimeAccelPhase(null));
         }
         return partialTick;
     }
 
     @ModifyVariable(method = "renderClouds", at = @At("HEAD"), argsOnly = true, ordinal = 0)
     private float jojoTsCloudsChangePartialTick(float partialTick) {
-        if (ClientHandler.getClientTimeData() == WorldCap.TimeData.ACCELERATION) {
+        if (TimeUtil.getTimeData(null) == WorldCap.TimeData.ACCELERATION) {
 //            System.out.println("p: " + partialTick * TimeUtil.getCalculatedPhase(WorldCapProvider.getClientTimeAccelPhase()));
-            return partialTick * TimeUtil.getCalculatedPhase(ClientHandler.getClientTimeAccelPhase());
+            return partialTick * TimeUtil.getCalculatedPhase(TimeUtil.getTimeAccelPhase(null));
         }
         return partialTick;
     }
