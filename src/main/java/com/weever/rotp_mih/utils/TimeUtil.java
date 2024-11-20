@@ -1,6 +1,7 @@
 package com.weever.rotp_mih.utils;
 
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
+import com.weever.rotp_mih.MadeInHeavenAddon;
 import com.weever.rotp_mih.capability.world.WorldCap;
 import com.weever.rotp_mih.capability.world.WorldCap.TimeData;
 import com.weever.rotp_mih.capability.world.WorldCapProvider;
@@ -70,7 +71,12 @@ public class TimeUtil {
             return equalUUID(ClientHandler.getClientTimeManipulatorUUID(), uuid);
         } else {
             if (!world.isClientSide()) {
-                return equalUUID(WorldCapProvider.getWorldCap((ServerWorld) world).getTimeManipulatorUUID(), uuid);
+                try {
+                    return equalUUID(WorldCapProvider.getWorldCap((ServerWorld) world).getTimeManipulatorUUID(), uuid);
+                } catch (IllegalArgumentException exception) {
+                    MadeInHeavenAddon.LOGGER.error("This world dont have a capability? Interesting.");
+                    return false;
+                }
             } else {
                 return equalUUID(ClientHandler.getClientTimeManipulatorUUID(), uuid);
             }
@@ -82,7 +88,12 @@ public class TimeUtil {
             return ClientHandler.getClientTimeData();
         } else {
             if (!world.isClientSide()) {
-                return WorldCapProvider.getWorldCap((ServerWorld) world).getTimeData();
+                try {
+                    return WorldCapProvider.getWorldCap((ServerWorld) world).getTimeData();
+                } catch (IllegalArgumentException exception) {
+                    MadeInHeavenAddon.LOGGER.error("This world dont have a capability? Interesting.");
+                    return TimeData.NONE;
+                }
             } else {
                 return ClientHandler.getClientTimeData();
             }
@@ -94,7 +105,12 @@ public class TimeUtil {
             return ClientHandler.getClientTimeManipulatorUUID();
         } else {
             if (!world.isClientSide()) {
-                return WorldCapProvider.getWorldCap((ServerWorld) world).getTimeManipulatorUUID();
+                try {
+                    return WorldCapProvider.getWorldCap((ServerWorld) world).getTimeManipulatorUUID();
+                } catch (IllegalArgumentException exception) {
+                    MadeInHeavenAddon.LOGGER.error("This world dont have a capability? Interesting.");
+                    return UUID.randomUUID();
+                }
             } else {
                 return ClientHandler.getClientTimeManipulatorUUID();
             }
@@ -106,7 +122,12 @@ public class TimeUtil {
             return ClientHandler.getClientTimeAccelPhase();
         } else {
             if (!world.isClientSide()) {
-                return WorldCapProvider.getWorldCap((ServerWorld) world).getTimeAccelerationPhase();
+                try {
+                    return WorldCapProvider.getWorldCap((ServerWorld) world).getTimeAccelerationPhase();
+                } catch (IllegalArgumentException exception) {
+                    MadeInHeavenAddon.LOGGER.error("This world dont have a capability? Interesting.");
+                    return 0;
+                }
             } else {
                 return ClientHandler.getClientTimeAccelPhase();
             }

@@ -52,8 +52,8 @@ import static com.weever.rotp_mih.utils.TimeUtil.multiplyProjectileSpeed;
 public class GameplayEventHandler {
     private static final int TICKS_FIRST_CLICK = TimeStopInstance.TIME_RESUME_SOUND_TICKS + 1;
     public static final Map<LivingEntity, Integer> entityTickCounters = new HashMap<>();
-    public static final UUID SPEED = UUID.fromString("0e9584f4-6936-41fc-8ddb-ab20a4ba626a");
-    public static final UUID SWIM = UUID.fromString("c4c806cc-b788-4503-aa45-6f35cb03f1ba");
+    public static final UUID SPEED = UUID.randomUUID();
+    public static final UUID SWIM = UUID.randomUUID();
     public static List<LivingEntity> haveBoosts = new ArrayList<>();
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

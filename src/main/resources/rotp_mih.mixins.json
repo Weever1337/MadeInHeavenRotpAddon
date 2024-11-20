@@ -3,7 +3,6 @@
   "compatibilityLevel": "JAVA_8",
   "package": "com.weever.rotp_mih.mixin",
   "refmap": "rotp_mih.mixins.refmap.json",
-  "plugin": "com.weever.rotp_mih.addoncompat.AddonMixinConfigPlugin",
   "minVersion": "0.8",
   "mixins": [
     "HamonUtilMixin",

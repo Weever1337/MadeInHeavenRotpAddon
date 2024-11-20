@@ -72,6 +72,7 @@ public class InitStands {
     public static final RegistryObject<StandEntityAction> MIH_TIME_SYSTEM = ACTIONS.register("mih_time_system",
             () -> new TimeSystem(new StandEntityAction.Builder()
                     .autoSummonStand()
+                    .holdToFire(25, false)
                     .partsRequired(StandPart.MAIN_BODY))
     );
 

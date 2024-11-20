@@ -5,6 +5,8 @@ import com.github.standobyte.jojo.action.ActionTarget;
 import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
+import com.github.standobyte.jojo.init.power.non_stand.ModPowers;
+import com.github.standobyte.jojo.power.impl.nonstand.INonStandPower;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.github.standobyte.jojo.util.mc.MCUtil;
 import com.weever.rotp_mih.init.InitStands;
@@ -35,7 +37,7 @@ public class UniverseReset extends StandEntityAction {
                         livingEntity -> {
                             MCUtil.runCommand(livingEntity, "particle minecraft:ambient_entity_effect "+user.getX()+" "+user.getY() + 1 +" "+user.getZ()+" .5 .5 .5 1 30");
                             if (livingEntity == user || livingEntity == standEntity) {
-                                livingEntity.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 180 * 20, 4, false, false, true));
+                                livingEntity.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 20 * 60, 4, false, false, true));
                                 userPower.setCooldownTimer(InitStands.MIH_TIME_SYSTEM.get(), 20 * 60);
                             } else {
                                 IStandPower.getStandPowerOptional(livingEntity).ifPresent(power -> {
@@ -44,6 +46,18 @@ public class UniverseReset extends StandEntityAction {
                                     if (!power.isActive()) {
                                         power.toggleSummon();
                                     }
+                                    power.setLeapCooldown(20 * 60);
+                                });
+
+                                INonStandPower.getNonStandPowerOptional(livingEntity).ifPresent(nonPower -> {
+//                                    if (nonPower.getType() == ModPowers.HAMON.get()) {
+//                                        nonPower.setEnergy(0);
+//                                    } else if (nonPower.getType() == ModPowers.VAMPIRISM.get()) {
+//                                        if (nonPower.getEnergy() <= nonPower.getMaxEnergy() / 2) {
+//                                            nonPower.setEnergy(nonPower.getMaxEnergy() / 2);
+//                                        }
+//                                    } TODO: Do it with an effect.
+                                    nonPower.setLeapCooldown(20 * 60);
                                 });
                                 livingEntity.addEffect(new EffectInstance(Effects.DIG_SLOWDOWN, 20 * 60, 10, false, false, true));
                             }

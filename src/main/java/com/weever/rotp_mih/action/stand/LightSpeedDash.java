@@ -9,16 +9,21 @@ import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.weever.rotp_mih.client.ClientHandler;
 import com.weever.rotp_mih.utils.TimeUtil;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeMod;
+
+import java.util.UUID;
 
 public class LightSpeedDash extends StandEntityAction {
     public LightSpeedDash(Builder builder) {
         super(builder);
     }
-
     boolean sprinting;
 
     @Override
@@ -31,13 +36,19 @@ public class LightSpeedDash extends StandEntityAction {
     }
 
     @Override
+    public void onClick(World world, LivingEntity user, IStandPower power) {
+        sprinting = user.isSprinting();
+    }
+
+    @Override
     public void standTickPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
         LivingEntity user = userPower.getUser();
         if (!world.isClientSide()) {
-            sprinting = user.isSprinting();
-            user.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 10, 99, false, false));
+//                user.setSprinting(sprinting);
+
             user.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 10, 14, false, false));
-            user.addEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 10, 19, false, false));
+            user.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 10, TimeUtil.getCalculatedPhase(TimeUtil.getTimeAccelPhase(world)) * 10, false, false));
+            user.addEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 10, 14, false, false));
         }
     }
 
@@ -45,10 +56,11 @@ public class LightSpeedDash extends StandEntityAction {
     protected void onTaskStopped(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task, StandEntityAction newAction) {
         LivingEntity user = userPower.getUser();
         if (!world.isClientSide()) {
-            user.removeEffect(Effects.MOVEMENT_SPEED);
             user.removeEffect(Effects.DAMAGE_RESISTANCE);
+            user.removeEffect(Effects.MOVEMENT_SPEED);
             user.removeEffect(Effects.DOLPHINS_GRACE);
-            user.setSprinting(sprinting);
+
+            sprinting = false;
         }
     }
 }

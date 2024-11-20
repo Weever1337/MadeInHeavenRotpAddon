@@ -7,10 +7,11 @@
     "1.2.0": "A BIG update, what reworked Time System, Universe Reset and etc.",
     "1.2.1": "Fixed a bug with Liquid Walking",
     "1.2.2": "Fixed asynchrony between client and server",
-    "1.2.3": "Fixed a bad moment with the server when im getting a client values from server "
+    "1.2.3": "Fixed a bad moment with the server when im getting a client values from server",
+    "1.2.3.1": "Fixed bug with WorldCap and with mixins."
   },
   "promos": {
-    "1.16.5-latest": "1.2.3",
-    "1.16.5-recommended": "1.2.3"
+    "1.16.5-latest": "1.2.3.1",
+    "1.16.5-recommended": "1.2.3.1"
   }
 }
