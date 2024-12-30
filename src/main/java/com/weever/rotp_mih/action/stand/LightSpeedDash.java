@@ -35,8 +35,9 @@ public class LightSpeedDash extends StandEntityAction {
     }
 
     @Override
-    public void onClick(World world, LivingEntity user, IStandPower power) {
-        sprinting = user.isSprinting();
+    public void onTaskSet(World world, StandEntity standEntity, IStandPower standPower, Phase phase, StandEntityTask task, int ticks) {
+        LivingEntity user = standPower.getUser();
+    	sprinting = user.isSprinting();
         if (!world.isClientSide()) {
         	AfterimageEntity afterImage = new AfterimageEntity(world, user, 1) {
         		@Override
