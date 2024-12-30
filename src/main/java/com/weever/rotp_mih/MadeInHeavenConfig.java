@@ -1,8 +1,9 @@
 package com.weever.rotp_mih;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.common.Mod;
-import org.apache.commons.lang3.tuple.Pair;
 
 @Mod.EventBusSubscriber(modid = MadeInHeavenAddon.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class MadeInHeavenConfig {
@@ -19,7 +20,7 @@ public class MadeInHeavenConfig {
         public final ForgeConfigSpec.BooleanValue isNewTSIconsEnabled;
         private Client(ForgeConfigSpec.Builder builder) {
             builder.push("Client config");
-            isNewTSIconsEnabled = builder.translation("rotp_mih.config.client.isNewClockIconsEnabled")
+            isNewTSIconsEnabled = builder.translation("rotp_mih.config.client.enableNewTSIcons")
                     .comment("  Determines if new clock related icons are enabled",
                             "  Default is to true.")
                     .define("enableNewTSIcons", true);

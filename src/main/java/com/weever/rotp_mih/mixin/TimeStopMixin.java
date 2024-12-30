@@ -1,16 +1,20 @@
 package com.weever.rotp_mih.mixin;
 
-import com.github.standobyte.jojo.action.stand.TimeStop;
-import com.github.standobyte.jojo.power.impl.stand.IStandPower;
-import com.weever.rotp_mih.capability.world.WorldCap;
-import com.weever.rotp_mih.client.ClientHandler;
-import com.weever.rotp_mih.init.InitStands;
-import com.weever.rotp_mih.utils.TimeUtil;
-import net.minecraft.entity.LivingEntity;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import com.github.standobyte.jojo.action.stand.TimeStop;
+import com.github.standobyte.jojo.power.impl.stand.IStandPower;
+import com.weever.rotp_mih.action.stand.TimeSystem;
+import com.weever.rotp_mih.capability.world.WorldCap;
+import com.weever.rotp_mih.init.InitStands;
+import com.weever.rotp_mih.utils.TimeUtil;
+
+import net.minecraft.entity.LivingEntity;
 
 @Mixin(TimeStop.class)
 public abstract class TimeStopMixin {
@@ -19,7 +23,13 @@ public abstract class TimeStopMixin {
         if (TimeUtil.customEqualUUID(user.getUUID(), null) && power.getType() == InitStands.MADE_IN_HEAVEN.getStandType()) {
             if (TimeUtil.getTimeData(user.level) == WorldCap.TimeData.ACCELERATION) {
                 if (TimeUtil.getTimeAccelPhase(user.level) > TimeUtil.GIVE_BUFFS) {
-                    cir.setReturnValue(true);
+                	AtomicBoolean canSee = new AtomicBoolean(false);
+                	power.getAllUnlockedActions().forEach(action -> {
+                		if (action instanceof TimeSystem) {
+                			canSee.set(((TimeSystem) action).canSeeInTimestopWhileAcceleration);
+                		}
+                	});
+                    cir.setReturnValue(canSee.get());
                 }
             }
         }

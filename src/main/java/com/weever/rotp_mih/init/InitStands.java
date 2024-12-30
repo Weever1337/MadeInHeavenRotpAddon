@@ -1,7 +1,11 @@
 package com.weever.rotp_mih.init;
 
 import com.github.standobyte.jojo.action.Action;
-import com.github.standobyte.jojo.action.stand.*;
+import com.github.standobyte.jojo.action.stand.StandEntityAction;
+import com.github.standobyte.jojo.action.stand.StandEntityBlock;
+import com.github.standobyte.jojo.action.stand.StandEntityHeavyAttack;
+import com.github.standobyte.jojo.action.stand.StandEntityLightAttack;
+import com.github.standobyte.jojo.action.stand.StandEntityMeleeBarrage;
 import com.github.standobyte.jojo.entity.stand.StandEntityType;
 import com.github.standobyte.jojo.init.power.stand.EntityStandRegistryObject;
 import com.github.standobyte.jojo.power.impl.stand.StandInstance.StandPart;
@@ -10,8 +14,12 @@ import com.github.standobyte.jojo.power.impl.stand.type.EntityStandType;
 import com.github.standobyte.jojo.power.impl.stand.type.StandType;
 import com.github.standobyte.jojo.util.mod.StoryPart;
 import com.weever.rotp_mih.MadeInHeavenAddon;
-import com.weever.rotp_mih.action.stand.*;
+import com.weever.rotp_mih.action.stand.Chop;
+import com.weever.rotp_mih.action.stand.LightSpeedDash;
+import com.weever.rotp_mih.action.stand.TimeSystem;
+import com.weever.rotp_mih.action.stand.UniverseReset;
 import com.weever.rotp_mih.entity.MadeInHeavenEntity;
+
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
@@ -49,12 +57,12 @@ public class InitStands {
                     .shiftVariationOf(MIH_PUNCH).shiftVariationOf(MIH_BARRAGE))
     );
 
-    public static final RegistryObject<StandEntityAction> MIH_THROAT_SLICE = ACTIONS.register("mih_throat_slice",
-            () -> new ThroatSlice(new StandEntityAction.Builder()
-                    .partsRequired(StandPart.ARMS)
-                    .staminaCost(150).cooldown(160, 160).resolveLevelToUnlock(1)
-            )
-    );
+//    public static final RegistryObject<StandEntityAction> MIH_THROAT_SLICE = ACTIONS.register("mih_throat_slice",
+//            () -> new ThroatSlice(new StandEntityAction.Builder()
+//                    .partsRequired(StandPart.ARMS)
+//                    .staminaCost(150).cooldown(160, 160).resolveLevelToUnlock(1)
+//            )
+//    );
 
     public static final RegistryObject<StandEntityAction> MIH_DASH = ACTIONS.register("mih_dash",
             () -> new LightSpeedDash(new StandEntityAction.Builder()
@@ -63,7 +71,7 @@ public class InitStands {
                     //.standSound(InitSounds.MIH_DASH)
                     .staminaCost(150).cooldown(50, 50).resolveLevelToUnlock(1)
                     .partsRequired(StandPart.LEGS)
-                    .holdType(3))
+                    .holdType(5))
     );
 
     public static final RegistryObject<StandEntityAction> MIH_BLOCK = ACTIONS.register("mih_block",
@@ -91,18 +99,18 @@ public class InitStands {
                             .storyPartName(StoryPart.STONE_OCEAN.getName())
                             .leftClickHotbar(
                                     MIH_PUNCH.get(),
-                                    MIH_BARRAGE.get(),
-                                    MIH_THROAT_SLICE.get()
+                                    MIH_BARRAGE.get()
+//                                    MIH_THROAT_SLICE.get()
                             )
                             .rightClickHotbar(
                                     MIH_BLOCK.get(),
                                     MIH_DASH.get(),
                                     MIH_TIME_SYSTEM.get()
                             )
-                            .defaultKey(
-                                    MIH_THROAT_SLICE.get(),
-                                    "key.keyboard.x"
-                            )
+//                            .defaultKey(
+//                                    MIH_THROAT_SLICE.get(),
+//                                    "key.keyboard.x"
+//                            )
                             .defaultKey(
                                     MIH_DASH.get(),
                                     "key.keyboard.c"

@@ -1,8 +1,11 @@
 package com.weever.rotp_mih.action.stand;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.github.standobyte.jojo.action.Action;
 import com.github.standobyte.jojo.action.ActionConditionResult;
 import com.github.standobyte.jojo.action.ActionTarget;
+import com.github.standobyte.jojo.action.config.ActionConfigField;
 import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
@@ -12,9 +15,9 @@ import com.github.standobyte.jojo.util.mod.JojoModUtil;
 import com.weever.rotp_mih.MadeInHeavenConfig;
 import com.weever.rotp_mih.capability.world.WorldCap;
 import com.weever.rotp_mih.capability.world.WorldCapProvider;
-import com.weever.rotp_mih.client.ClientHandler;
 import com.weever.rotp_mih.init.InitSounds;
 import com.weever.rotp_mih.utils.TimeUtil;
+
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -26,11 +29,13 @@ import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import org.jetbrains.annotations.Nullable;
 
 public class TimeSystem extends StandEntityAction {
+	@ActionConfigField public final boolean canSeeInTimestopWhileAcceleration;
+	
     public TimeSystem(Builder builder) {
         super(builder);
+        this.canSeeInTimestopWhileAcceleration = true;
     }
 
     @Override

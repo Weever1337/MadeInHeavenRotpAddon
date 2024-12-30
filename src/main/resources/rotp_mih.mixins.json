@@ -6,9 +6,7 @@
   "minVersion": "0.8",
   "mixins": [
     "HamonUtilMixin",
-    "TimeStopMixin"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+    "TimeStopMixin",
+	"GrowthMixin"
+  ]
 }

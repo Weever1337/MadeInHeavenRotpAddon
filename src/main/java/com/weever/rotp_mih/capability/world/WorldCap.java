@@ -12,7 +12,6 @@ import java.util.UUID;
 
 public class WorldCap {
     private final ServerWorld world;
-    private UUID serverId;
     private UUID timeManipulatorUUID;
     private boolean isTimeManipulatorPlayer;
     private TimeData timeData = TimeData.NONE;
@@ -21,9 +20,6 @@ public class WorldCap {
 
     public WorldCap(ServerWorld world) {
         this.world = world;
-        if (!world.isClientSide()) {
-            this.serverId = UUID.randomUUID();
-        }
     }
 
     public void tick() {
@@ -84,14 +80,10 @@ public class WorldCap {
 
     CompoundNBT save() {
         CompoundNBT nbt = new CompoundNBT();
-        nbt.putUUID("ServerId", serverId);
         return nbt;
     }
 
     void load(CompoundNBT nbt) {
-        if (nbt.hasUUID("ServerId")) {
-            serverId = nbt.getUUID("ServerId");
-        }
     }
 
     public void syncData(PlayerEntity player) {

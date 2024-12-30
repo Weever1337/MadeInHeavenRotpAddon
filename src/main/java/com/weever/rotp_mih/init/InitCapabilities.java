@@ -19,7 +19,7 @@ public class InitCapabilities {
     @SubscribeEvent
     public static void onAttachCapabilitiesWorld(AttachCapabilitiesEvent<World> event) {
         World world = event.getObject();
-        if (!world.isClientSide() && world.dimension() == World.OVERWORLD) {
+        if (!world.isClientSide()) {
             event.addCapability(WORLD_CAP, new WorldCapProvider((ServerWorld) world));
         }
     }

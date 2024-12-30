@@ -1,21 +1,26 @@
 package com.weever.rotp_mih.mixin;
 
-import com.weever.rotp_mih.capability.world.WorldCap;
-import com.weever.rotp_mih.client.ClientHandler;
-import com.weever.rotp_mih.utils.TimeUtil;
-import net.minecraft.block.*;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import java.util.Random;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Random;
+import com.weever.rotp_mih.capability.world.WorldCap;
+import com.weever.rotp_mih.utils.TimeUtil;
 
-@SuppressWarnings("crashing, idk how to fix")
-@Mixin({CropsBlock.class, SweetBerryBushBlock.class, LeavesBlock.class, CactusBlock.class, NetherWartBlock.class})
+import net.minecraft.block.BlockState;
+import net.minecraft.block.CactusBlock;
+import net.minecraft.block.CropsBlock;
+import net.minecraft.block.LeavesBlock;
+import net.minecraft.block.NetherWartBlock;
+import net.minecraft.block.SweetBerryBushBlock;
+import net.minecraft.state.IntegerProperty;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.server.ServerWorld;
+
+@Mixin(value = {CropsBlock.class, SweetBerryBushBlock.class, LeavesBlock.class, CactusBlock.class, NetherWartBlock.class}, remap = false)
 public class GrowthMixin {
     @Inject(method = "randomTick", at = @At("HEAD"))
     public void onRandomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
